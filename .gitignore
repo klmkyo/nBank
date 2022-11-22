@@ -35,5 +35,9 @@
 vcpkg/*
 vcpkg
 
-# 
+# Own
 build/*
+.vscode/
+Makefile
+CMakeFiles
+src/CMakeFiles
