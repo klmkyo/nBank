@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/amnesia/Dokumenty/programming/nBank/vcpkg/installed/x64-linux/include/**"            ],
+            "defines": []
+            
+        }
+    ]
+    
+}
