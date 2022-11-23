@@ -4,7 +4,7 @@ git clone https://github.com/klmkyo/nBank
 cd nBank
 git clone https://github.com/microsoft/vcpkg
 ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-./vcpkg/vcpkg install sqlite3 ftxui
+./vcpkg/vcpkg install sqlite3 ftxui sqlite-orm
 ```
 
 Building 
