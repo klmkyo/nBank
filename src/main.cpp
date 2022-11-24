@@ -3,10 +3,17 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/screen/string.hpp>
-
+#include <Database/database.hpp>
 
 int main() {
     std::cout << "Hello World!" << std::endl;
+
+    // Database service testing
+    Database::getStorage()->sync_schema();
+    auto id = Database::getStorage()->insert(User{-1, "testowy"});
+    std::cout << id << std::endl;
+    // -----
+
     using namespace ftxui;
 
     auto summary = [&] {

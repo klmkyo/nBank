@@ -5,7 +5,6 @@ struct User {
   int id;
 
   std::string name;
-  std::set<int> account_ids;
 };
 
 struct Account {
@@ -14,8 +13,6 @@ struct Account {
   int user_id;
   std::string name;
   double balance;
-  
-  std::set<int> creditcard_ids;
 };
 
 struct CreditCard {
