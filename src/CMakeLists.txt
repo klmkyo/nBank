@@ -1,6 +1,10 @@
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-SET (SOURCE_FILES main.cpp Database/database.hpp Database/structures.hpp)
+SET (SOURCE_FILES main.cpp 
+Database/database.hpp 
+Database/structures.hpp 
+Repositories/user.hpp 
+Repositories/user.cpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

@@ -4,14 +4,18 @@
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/screen/string.hpp>
 #include <Database/database.hpp>
+#include <Repositories/user.hpp>
 
 int main() {
     std::cout << "Hello World!" << std::endl;
 
-    // Database service testing
+    // Database service & repo test
     Database::getStorage()->sync_schema();
-    auto id = Database::getStorage()->insert(User{-1, "testowy"});
-    std::cout << id << std::endl;
+    auto repo = std::make_shared<UserRepo>();
+            // tworzy nowego Usera z nazwą test123
+    uint32_t newuser = repo->InsertUser(new User{-1, "test123"});
+            // zwraca nazwe nowego usera
+    std::cout << repo->GetUserById(newuser)->name << std::endl;
     // -----
 
     using namespace ftxui;
