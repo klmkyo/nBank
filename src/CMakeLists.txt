@@ -4,7 +4,10 @@ SET (SOURCE_FILES main.cpp
 Database/database.hpp 
 Database/structures.hpp 
 Repositories/user.hpp 
-Repositories/user.cpp)
+Repositories/user.cpp
+Repositories/account.hpp
+Repositories/account.cpp
+Repositories/repos.hpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

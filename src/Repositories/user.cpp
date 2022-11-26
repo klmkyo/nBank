@@ -16,21 +16,21 @@ std::unique_ptr<User> UserRepo::GetUserById(uint32_t uid)
 /// @param user 
 /// @param overwrite (optional, default: false)
 /// @return ID of created user (if failed, returns -1)
-uint32_t UserRepo::InsertUser(User* user, bool overwrite)
+uint32_t UserRepo::InsertUser(const User& user, bool overwrite)
 {
-    auto _user = UserRepo::GetUserById(user->id);
+    auto _user = UserRepo::GetUserById(user.id);
     uint32_t id = -1;
     if (_user && overwrite){
         try{
-            Database::getStorage()->replace(*user);
-            id = user->id;
+            Database::getStorage()->replace(user);
+            id = user.id;
         }catch(...) {
             // TODO: Exception handling
             return -1;
         }
     } else {
         try{
-            id = Database::getStorage()->insert(*user);
+            id = Database::getStorage()->insert(user);
         }catch(...) {
             // TODO: Exception handling
             return -1;

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <string>
 
 #ifndef _STRUCTURES_HEADER
 #define _STRUCTURES_HEADER
@@ -8,7 +9,14 @@ struct User {
   int id;
 
   std::string name;
+
+  friend std::ostream& operator<<(std::ostream& os, const User& u)
+  {
+    return os << "User(id=" << u.id << ", name=" << u.name << ")";
+  }
 };
+
+
 
 struct Account {
   int id;
@@ -16,6 +24,11 @@ struct Account {
   int user_id;
   std::string name;
   double balance;
+
+  friend std::ostream& operator<<(std::ostream& os, const Account& acc)
+  {
+    return os << "Account(id=" << acc.id << ", name=" << acc.name << ", user="<<acc.user_id<<", balance="<<acc.balance<<")";
+  }
 };
 
 struct CreditCard {
@@ -29,6 +42,13 @@ struct CreditCard {
   int expiration_month;
   int expiration_year;
   int pin;
+
+  friend std::ostream& operator<<(std::ostream& os, const CreditCard& cc)
+  {
+    return os << "CreditCard(id=" << cc.id << ", name=" << cc.name << ", account_id="<<cc.account_id
+    <<", number="<<cc.number<<", cvv="<<cc.cvv<<", expiration_month="<<cc.expiration_month<<", expiration_year="
+    <<cc.expiration_year<<", pin="<<cc.pin<<")";
+  }
 };
 
 /* Structure Builder - should be used only once (in Database definition)*/
