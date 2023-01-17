@@ -57,16 +57,21 @@ int main() {
     });
 
     auto renderer = Renderer(component, [&] {
-        return window(text("Logowanie"), vbox({
-                hbox(
-                    input_first_name->Render() | borderLight,
-                    input_password->Render() | borderLight
-                ),
-                button->Render()
-            }));
+        return 
+            center(
+                window(text("Logowanie"), vbox(
+                    vbox(
+                        input_first_name->Render() | borderLight,
+                        input_password->Render() | borderLight
+                    ),
+                    separator(),
+                    button->Render()
+                    )
+                ) | size(WIDTH, EQUAL, 60)
+            );
     });
 
-    auto screen = ScreenInteractive::TerminalOutput();
+    auto screen = ScreenInteractive::Fullscreen();
     screen.Loop(renderer);
     return 0;
 }
