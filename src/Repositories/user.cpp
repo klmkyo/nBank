@@ -65,7 +65,7 @@ LoginResult Login(const std::string& login, const std::string& password)
     // dlatego musimy użyć get_all
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() == 0){
-        return LoginResult::USER_NOT_FOUND;
+        return LoginResult { LoginStatus::USER_NOT_FOUND, nullptr };
     } else if (users.size() > 1){
         // to się nie powinno zdarzyć, ale w razie czego zwróć błąd
         std::cerr << "Znaleziono kilku użytkowników o takim samym loginie!" << std::endl;
@@ -73,20 +73,20 @@ LoginResult Login(const std::string& login, const std::string& password)
     } else {
         // sprawdź hasło
         if (VerifyPassword(password, users[0].password_hash, users[0].password_salt)){
-            return LoginResult::SUCCESS;
+            return LoginResult { LoginStatus::SUCCESS, std::make_unique<User>(users[0]) };
         } else {
-            return LoginResult::WRONG_PASSWORD;
+            return LoginResult { LoginStatus::WRONG_PASSWORD, nullptr };
         }
     }
 }
 
-RegisterResult Register(const std::string& login, const std::string& password)
+RegisterStatus Register(const std::string& login, const std::string& password)
 {
     using namespace sqlite_orm;
     // sprawdź czy użytkownik o takim loginie już istnieje
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() > 0){
-        return RegisterResult::USER_EXISTS;
+        return RegisterStatus::USER_EXISTS;
     } else {
         // zarejestruj użytkownika
         User user;
@@ -95,9 +95,9 @@ RegisterResult Register(const std::string& login, const std::string& password)
         user.password_hash = hp.hash;
         user.password_salt = hp.salt;
         if (Repo::User()->InsertUser(user) == -1){
-            return RegisterResult::INTERNAL_ERROR;
+            return RegisterStatus::INTERNAL_ERROR;
         } else {
-            return RegisterResult::SUCCESS;
+            return RegisterStatus::SUCCESS;
         }
     }
 }

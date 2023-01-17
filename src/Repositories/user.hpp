@@ -13,14 +13,19 @@ struct HashedPassword {
     std::string salt;
 };
 
-enum class LoginResult {
+enum class LoginStatus {
     SUCCESS,
     WRONG_PASSWORD,
     USER_NOT_FOUND,
     INTERNAL_ERROR
 };
 
-enum class RegisterResult {
+struct LoginResult {
+    LoginStatus status;
+    std::unique_ptr<User> user;
+};
+
+enum class RegisterStatus {
     SUCCESS,
     USER_EXISTS,
     INTERNAL_ERROR
@@ -30,4 +35,4 @@ HashedPassword HashPassword(const std::string& password);
 bool VerifyPassword(const std::string& password, const std::string& hash, const std::string& salt);
 std::string gen_random(const int len);
 LoginResult Login(const std::string& login, const std::string& password);
-RegisterResult Register(const std::string& login, const std::string& password);
+RegisterStatus Register(const std::string& login, const std::string& password);
