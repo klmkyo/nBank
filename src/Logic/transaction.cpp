@@ -5,15 +5,24 @@ Transaction::Transaction(Account* account, double amount){
     this->amount = amount;
 }
 
-bool Transaction::CheckExecute(){
-    return this->RequirePIN() 
-        && this->amount >= account->balance;
+bool Transaction::CheckExecute(TransactionResult& result){
+    if (this->account == nullptr){
+        result = TransactionResult::ACCOUNT_NOT_FOUND;
+        return false;
+    }
+    if (this->amount < 0 && this->account->balance < this->amount){
+        result = TransactionResult::NO_MONEY;
+        return false;
+    }
+    result = TransactionResult::SUCCESS;
+    return true;
 }
 
-bool Transaction::Execute(){
-    if (this->CheckExecute()){
-        account->balance -= this->amount;
-        // log transaction
+bool Transaction::Execute(TransactionResult& result){
+    if (this->CheckExecute(result)){
+        this->account->balance += this->amount;
+        Repo::Account()->UpdateAccount(*(this->account));
+        // TODO: log transaction ?
         return true;
     }
     return false;
