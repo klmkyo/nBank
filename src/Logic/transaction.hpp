@@ -12,15 +12,17 @@ enum class TransactionResult {
 };
 
 class Transaction {
-    private:
-    Account* account = nullptr;
-    
 
     protected:
     double amount = 0.0;
+    Account* account = nullptr;
+    bool requirePin = false;
+    bool wrongPin = true;
     
 
     public:
+    Transaction(){};
+    Transaction(double amount){this->amount = amount;};
     Transaction(Account* account, double amount);
 
     virtual bool CheckExecute(TransactionResult& result);

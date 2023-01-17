@@ -4,11 +4,11 @@
 #define _TRANSFER_HEADER
 
 class Transfer : public Transaction {
-    private:
+    protected:
     Account* recipient;
 
     public:
-    Transfer(Account* account, double amount, Account* recipient);
+    Transfer(Account* account, double amount, Account* recipient = nullptr);
     
     virtual bool Execute(TransactionResult& result);
 };

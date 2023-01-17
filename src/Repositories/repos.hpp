@@ -1,5 +1,7 @@
 #include "user.hpp"
 #include "account.hpp"
+#include "creditcard.hpp"
+#pragma once
 
 class Repo
 {
@@ -11,5 +13,9 @@ class Repo
     /// @return Account repository pointer
     static std::shared_ptr<AccountRepo> Account() {
         return std::make_shared<AccountRepo>();
+    }
+    /// @return CreditCard repository pointer
+    static std::shared_ptr<CreditCardRepo> CreditCard() {
+        return std::make_shared<CreditCardRepo>();
     }
 };

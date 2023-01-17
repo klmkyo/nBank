@@ -56,7 +56,7 @@ HashedPassword HashPassword(const std::string& password)
     return hp;
 }
 
-LoginResult Login(const std::string& login, const std::string& password)
+LoginResponse Login(const std::string& login, const std::string& password)
 {
     using namespace sqlite_orm;
     // znajdź użytkownika
@@ -65,7 +65,7 @@ LoginResult Login(const std::string& login, const std::string& password)
     // dlatego musimy użyć get_all
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() == 0){
-        return LoginResult::USER_NOT_FOUND;
+        return LoginResponse { LoginResult::USER_NOT_FOUND };
     } else if (users.size() > 1){
         // to się nie powinno zdarzyć, ale w razie czego zwróć błąd
         std::cerr << "Znaleziono kilku użytkowników o takim samym loginie!" << std::endl;
@@ -73,9 +73,9 @@ LoginResult Login(const std::string& login, const std::string& password)
     } else {
         // sprawdź hasło
         if (VerifyPassword(password, users[0].password_hash, users[0].password_salt)){
-            return LoginResult::SUCCESS;
+            return LoginResponse { LoginResult::SUCCESS, users[0] };
         } else {
-            return LoginResult::WRONG_PASSWORD;
+            return LoginResponse { LoginResult::WRONG_PASSWORD };
         }
     }
 }

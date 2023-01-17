@@ -10,6 +10,10 @@ bool Transaction::CheckExecute(TransactionResult& result){
         result = TransactionResult::ACCOUNT_NOT_FOUND;
         return false;
     }
+    if (this->requirePin && this->wrongPin){
+        result = TransactionResult::WRONG_PIN;
+        return false;
+    }
     if (this->amount < 0 && this->account->balance < this->amount){
         result = TransactionResult::NO_MONEY;
         return false;

@@ -7,13 +7,16 @@ Repositories/user.hpp
 Repositories/user.cpp
 Repositories/account.hpp
 Repositories/account.cpp
+Repositories/creditcard.hpp
+Repositories/creditcard.cpp
 Repositories/repos.hpp
 Utils/sha256.hpp
 Utils/sha256.cpp
 Logic/transaction.hpp
 Logic/transaction.cpp
 Logic/transfer.cpp
-Logic/transfer.hpp)
+Logic/transfer.hpp
+Logic/payments.hpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

@@ -26,10 +26,11 @@ struct Account {
   int user_id;
   std::string name;
   double balance;
+  int phone_number;
 
   friend std::ostream& operator<<(std::ostream& os, const Account& acc)
   {
-    return os << "Account(id=" << acc.id << ", name=" << acc.name << ", user="<<acc.user_id<<", balance="<<acc.balance<<")";
+    return os << "Account(id=" << acc.id << ", name=" << acc.name << ", user="<<acc.user_id<<", balance="<<acc.balance<<", phone_number="<<acc.phone_number<<")";
   }
 };
 
@@ -76,7 +77,8 @@ class StructureBuilder{
                         make_column("id", &Account::id, autoincrement(), primary_key()),
                         make_column("user_id", &Account::user_id),
                         make_column("name", &Account::name),
-                        make_column("balance", &Account::balance)),
+                        make_column("balance", &Account::balance),
+                        make_column("phone_number", &Account::phone_number)),
                 make_table<CreditCard>("credit_cards",
                         make_column("id", &CreditCard::id, autoincrement(), primary_key()),
                         make_column("account_id", &CreditCard::account_id),
