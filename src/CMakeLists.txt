@@ -9,7 +9,11 @@ Repositories/account.hpp
 Repositories/account.cpp
 Repositories/repos.hpp
 Utils/sha256.hpp
-Utils/sha256.cpp)
+Utils/sha256.cpp
+Logic/transaction.hpp
+Logic/transaction.cpp
+Logic/transfer.cpp
+Logic/transfer.hpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
