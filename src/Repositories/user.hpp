@@ -22,7 +22,7 @@ enum class LoginStatus {
 
 struct LoginResult {
     LoginStatus status;
-    std::unique_ptr<User> user;
+    User user;
 };
 
 enum class RegisterStatus {

@@ -65,7 +65,7 @@ LoginResult Login(const std::string& login, const std::string& password)
     // dlatego musimy użyć get_all
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() == 0){
-        return LoginResult { LoginStatus::USER_NOT_FOUND, nullptr };
+        return LoginResult { LoginStatus::USER_NOT_FOUND };
     } else if (users.size() > 1){
         // to się nie powinno zdarzyć, ale w razie czego zwróć błąd
         std::cerr << "Znaleziono kilku użytkowników o takim samym loginie!" << std::endl;
@@ -73,9 +73,9 @@ LoginResult Login(const std::string& login, const std::string& password)
     } else {
         // sprawdź hasło
         if (VerifyPassword(password, users[0].password_hash, users[0].password_salt)){
-            return LoginResult { LoginStatus::SUCCESS, std::make_unique<User>(users[0]) };
+            return LoginResult { LoginStatus::SUCCESS, users[0] };
         } else {
-            return LoginResult { LoginStatus::WRONG_PASSWORD, nullptr };
+            return LoginResult { LoginStatus::WRONG_PASSWORD };
         }
     }
 }

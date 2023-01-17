@@ -12,7 +12,18 @@
 
 using namespace ftxui;
 
-Component ModalComponent(std::function<void()> do_nothing, std::function<void()> hide_modal);
+// TODO zamiast nestować tworzenie roznych screenów,
+// nalezy zrobic osobne componenty i je renderowac
+
+void LoginScreen();
+void Dashboard(User user);
+void Dialog(const std::string& message);
+
+enum class Menu {
+    LOGIN,
+    REGISTER,
+    DIALOG,
+};
 
 int main() {
 
@@ -39,7 +50,13 @@ int main() {
     //     }
     // }
     // --------------
+    
+    LoginScreen();
 
+    return 0;
+}
+
+void LoginScreen() {
     std::string login;
     std::string password;
 
@@ -48,40 +65,23 @@ int main() {
     password_option.password = true;
     Component input_password = Input(&password, "hasło", password_option);
 
-    bool show_modal = false;
-
-    Component registerbutton = Button("Zarejestruj się", [&] {
-        auto status = Register(login, password);
-        switch (status)
-        {
-            case RegisterStatus::SUCCESS:
-            std::cout << "Zarejestrowano" << std::endl;
-            break;
-            case RegisterStatus::USER_EXISTS:
-            std::cout << "Użytkownik już istnieje" << std::endl;
-            break;
-            case RegisterStatus::INTERNAL_ERROR:
-            std::cout << "Błąd wewnętrzny" << std::endl;
-            break;
-        }
-    });
-
     Component loginbutton = Button("Zaloguj się", [&] {
         auto result = Login(login, password);
         switch (result.status)
         {
             case LoginStatus::SUCCESS:
-            std::cout << "Zalogowano" << std::endl;
-            break;
+                Dashboard(result.user);
+                return result.user;
+                break;
             case LoginStatus::WRONG_PASSWORD:
-            std::cout << "Błędne hasło" << std::endl;
-            break;
+                Dialog("Niepoprawne hasło");
+                break;
             case LoginStatus::USER_NOT_FOUND:
-            std::cout << "Użytkownik nie istnieje" << std::endl;
-            break;
+                Dialog("Niepoprawny login");
+                break;
             case LoginStatus::INTERNAL_ERROR:
-            std::cout << "Błąd wewnętrzny" << std::endl;
-            break;
+                Dialog("Błąd wewnętrzny");
+                break;
         }
     });
 
@@ -106,33 +106,63 @@ int main() {
             );
     });
 
-    auto hide_modal = [&] { show_modal = false; };
-    auto do_nothing = [&] {};
-    auto modal_component = ModalComponent(do_nothing, hide_modal);
-
-    renderer |= Modal();
-
     auto screen = ScreenInteractive::Fullscreen();
     screen.Loop(renderer);
-    return 0;
 }
 
-// Definition of the modal component. The details are not important.
-Component ModalComponent(std::function<void()> do_nothing,
-                         std::function<void()> hide_modal) {
-  auto component = Container::Vertical({
-      Button("Do nothing", do_nothing),
-      Button("Quit modal", hide_modal),
-  });
-  // Polish how the two buttons are rendered:
-  component |= Renderer([&](Element inner) {
-    return vbox({
-               text("Modal component "),
-               separator(),
-               inner,
-           })
-           | size(WIDTH, GREATER_THAN, 30)
-           | border;
-  });
-  return component;
+void Dialog(const std::string& message)
+{
+    auto screen = ScreenInteractive::Fullscreen();
+
+    auto ok_button = Button("OK", [&] {
+        screen.ExitLoopClosure()();
+    });
+
+    auto component = Container::Vertical({
+        ok_button
+    });
+
+    auto renderer = Renderer(component, [&] {
+        return 
+            center(
+                vbox(
+                    vbox(
+                        text(message)
+                    ),
+                    separator(),
+                    ok_button->Render()
+                 ) | border | size(WIDTH, EQUAL, 60)
+            );
+    });
+
+    screen.Loop(renderer);
+}
+
+void Dashboard(User user)
+{
+    auto screen = ScreenInteractive::Fullscreen();
+
+    auto logout_button = Button("Wyloguj", [&] {
+        screen.ExitLoopClosure()();
+    });
+
+    auto component = Container::Vertical({
+        logout_button
+    });
+
+    auto renderer = Renderer(component, [&] {
+        return 
+            center(
+                window(text("Dialog"), vbox(
+                    vbox(
+                        text("Witaj " + user.login)
+                    ),
+                    separator(),
+                    logout_button->Render()
+                    )
+                ) | size(WIDTH, EQUAL, 60)
+            );
+    });
+
+    screen.Loop(renderer);
 }
