@@ -3,6 +3,8 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/screen/string.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+#include <ftxui/component/component.hpp>
 #include <Database/database.hpp>
 #include <Repositories/repos.hpp>
 
@@ -33,32 +35,36 @@ int main() {
     // --------------
 
     using namespace ftxui;
-
-    auto summary = [&] {
-        auto content = vbox({
-            hbox({text(L"- done:   "), text(L"3") | bold}) | color(Color::Green),
-            hbox({text(L"- active: "), text(L"2") | bold}) | color(Color::RedLight),
-            hbox({text(L"- queue:  "), text(L"9") | bold}) | color(Color::Red),
-        });
-        return window(text(L" Summary "), content);
+    // bank dashboard main loop
+    std::vector<std::string> entries = {
+        "tribute",     "clearance", "ally",        "bend",        "electronics",
+        "module",      "era",       "cultural",    "sniff",       "nationalism",
+        "negotiation", "deliver",   "figure",      "east",        "tribute",
+        "clearance",   "ally",      "bend",        "electronics", "module",
+        "era",         "cultural",  "sniff",       "nationalism", "negotiation",
+        "deliver",     "figure",    "east",        "tribute",     "clearance",
+        "ally",        "bend",      "electronics", "module",      "era",
+        "cultural",    "sniff",     "nationalism", "negotiation", "deliver",
+        "figure",      "east",
     };
-
-    auto document =  //
-        vbox({
-            hbox({
-                summary(),
-                summary(),
-                summary() | flex,
-            }),
-            summary(),
-            summary(),
-        });
-
-    // Limit the size of the document to 80 char.
-    document = document | size(WIDTH, LESS_THAN, 80);
-
-    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
-    Render(screen, document);
-
-    std::cout << screen.ToString() << '\0' << std::endl;
+    
+    int selected_1 = 0;
+    int selected_2 = 0;
+    int selected_3 = 0;
+    int selected_4 = 0;
+    
+    auto layout = Container::Vertical({
+        Container::Horizontal({
+            Dropdown(&entries, &selected_1),
+            Dropdown(&entries, &selected_2),
+        }),
+        Container::Horizontal({
+            Dropdown(&entries, &selected_3),
+            Dropdown(&entries, &selected_4),
+        }),
+    });
+    
+    auto screen = ScreenInteractive::FitComponent();
+    screen.Loop(layout);
+    return 0;
 }
