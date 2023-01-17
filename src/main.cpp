@@ -69,17 +69,17 @@ void LoginScreen() {
         auto result = Login(login, password);
         switch (result.status)
         {
-            case LoginStatus::SUCCESS:
+            case LoginResult::SUCCESS:
                 Dashboard(result.user);
                 return result.user;
                 break;
-            case LoginStatus::WRONG_PASSWORD:
+            case LoginResult::WRONG_PASSWORD:
                 Dialog("Niepoprawne hasło");
                 break;
-            case LoginStatus::USER_NOT_FOUND:
+            case LoginResult::USER_NOT_FOUND:
                 Dialog("Niepoprawny login");
                 break;
-            case LoginStatus::INTERNAL_ERROR:
+            case LoginResult::INTERNAL_ERROR:
                 Dialog("Błąd wewnętrzny");
                 break;
         }

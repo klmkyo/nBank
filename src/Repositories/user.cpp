@@ -56,7 +56,7 @@ HashedPassword HashPassword(const std::string& password)
     return hp;
 }
 
-LoginResult Login(const std::string& login, const std::string& password)
+LoginResponse Login(const std::string& login, const std::string& password)
 {
     using namespace sqlite_orm;
     // znajdź użytkownika
@@ -65,7 +65,7 @@ LoginResult Login(const std::string& login, const std::string& password)
     // dlatego musimy użyć get_all
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() == 0){
-        return LoginResult { LoginStatus::USER_NOT_FOUND };
+        return LoginResponse { LoginResult::USER_NOT_FOUND };
     } else if (users.size() > 1){
         // to się nie powinno zdarzyć, ale w razie czego zwróć błąd
         std::cerr << "Znaleziono kilku użytkowników o takim samym loginie!" << std::endl;
@@ -73,20 +73,20 @@ LoginResult Login(const std::string& login, const std::string& password)
     } else {
         // sprawdź hasło
         if (VerifyPassword(password, users[0].password_hash, users[0].password_salt)){
-            return LoginResult { LoginStatus::SUCCESS, users[0] };
+            return LoginResponse { LoginResult::SUCCESS, users[0] };
         } else {
-            return LoginResult { LoginStatus::WRONG_PASSWORD };
+            return LoginResponse { LoginResult::WRONG_PASSWORD };
         }
     }
 }
 
-RegisterStatus Register(const std::string& login, const std::string& password)
+RegisterResult Register(const std::string& login, const std::string& password)
 {
     using namespace sqlite_orm;
     // sprawdź czy użytkownik o takim loginie już istnieje
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() > 0){
-        return RegisterStatus::USER_EXISTS;
+        return RegisterResult::USER_EXISTS;
     } else {
         // zarejestruj użytkownika
         User user;
@@ -95,9 +95,9 @@ RegisterStatus Register(const std::string& login, const std::string& password)
         user.password_hash = hp.hash;
         user.password_salt = hp.salt;
         if (Repo::User()->InsertUser(user) == -1){
-            return RegisterStatus::INTERNAL_ERROR;
+            return RegisterResult::INTERNAL_ERROR;
         } else {
-            return RegisterStatus::SUCCESS;
+            return RegisterResult::SUCCESS;
         }
     }
 }
