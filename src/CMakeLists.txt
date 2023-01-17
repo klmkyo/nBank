@@ -7,7 +7,9 @@ Repositories/user.hpp
 Repositories/user.cpp
 Repositories/account.hpp
 Repositories/account.cpp
-Repositories/repos.hpp)
+Repositories/repos.hpp
+Utils/sha256.hpp
+Utils/sha256.cpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
