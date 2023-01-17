@@ -7,12 +7,14 @@
 
 struct User {
   int id;
-
   std::string name;
+  std::string login;
+  std::string password_hash;
+  char password_salt[16];
 
   friend std::ostream& operator<<(std::ostream& os, const User& u)
   {
-    return os << "User(id=" << u.id << ", name=" << u.name << ")";
+    return os << "User(id=" << u.id << ", name=" << u.name << " login=" << u.login << " password_hash=" << u.password_hash << " password_salt=" << u.password_salt << ")";
   }
 };
 
@@ -66,6 +68,9 @@ class StructureBuilder{
         return make_storage(path,
                 make_table<User>("users",
                         make_column("id", &User::id, autoincrement(), primary_key()),
+                        make_column("login", &User::login),
+                        make_column("password_hash", &User::password_hash),
+                        make_column("password_salt", &User::password_salt),
                         make_column("name", &User::name)),
                 make_table<Account>("accounts",
                         make_column("id", &Account::id, autoincrement(), primary_key()),
