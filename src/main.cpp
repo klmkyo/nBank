@@ -9,7 +9,21 @@
 #include <Database/database.hpp>
 #include <Repositories/repos.hpp>
 #include <Repositories/user.hpp>
-#include <ftxui/component/component_options.hpp>  // for InputOption
+
+using namespace ftxui;
+
+// TODO zamiast nestować tworzenie roznych screenów,
+// nalezy zrobic osobne componenty i je renderowac
+
+void LoginScreen();
+void Dashboard(User user);
+void Dialog(const std::string& message);
+
+enum class Menu {
+    LOGIN,
+    REGISTER,
+    DIALOG,
+};
 
 int main() {
     Database::getStorage()->sync_schema();
