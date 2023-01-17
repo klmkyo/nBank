@@ -29,3 +29,5 @@ enum class RegisterResult {
 HashedPassword HashPassword(const std::string& password);
 bool VerifyPassword(const std::string& password, const std::string& hash, const std::string& salt);
 std::string gen_random(const int len);
+LoginResult Login(const std::string& login, const std::string& password);
+RegisterResult Register(const std::string& login, const std::string& password);
