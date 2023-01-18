@@ -28,6 +28,7 @@ struct LoginResponse {
 enum class RegisterResult {
     SUCCESS,
     USER_EXISTS,
+    FIELDS_EMPTY,
     INTERNAL_ERROR
 };
 

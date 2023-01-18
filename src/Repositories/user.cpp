@@ -83,6 +83,11 @@ LoginResponse Login(const std::string& login, const std::string& password)
 RegisterResult Register(const std::string& login, const std::string& password)
 {
     using namespace sqlite_orm;
+    // sprawdź czy pola nie są puste
+    if (login.empty() || password.empty()){
+        return RegisterResult::FIELDS_EMPTY;
+    }
+
     // sprawdź czy użytkownik o takim loginie już istnieje
     auto users = Database::getStorage()->get_all<User>(where(c(&User::login) == login));
     if (users.size() > 0){
