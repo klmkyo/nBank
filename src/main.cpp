@@ -1,29 +1,9 @@
 #include <iostream>
 #include <sqlite3.h>
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/screen.hpp>
-#include <ftxui/screen/string.hpp>
-#include <ftxui/component/component_options.hpp>  // for InputOption
-#include <ftxui/component/screen_interactive.hpp>
-#include <ftxui/component/component.hpp>
 #include <Database/database.hpp>
 #include <Repositories/repos.hpp>
 #include <Repositories/user.hpp>
-
-using namespace ftxui;
-
-// TODO zamiast nestować tworzenie roznych screenów,
-// nalezy zrobic osobne componenty i je renderowac
-
-void LoginScreen();
-void Dashboard(User user);
-void Dialog(const std::string& message);
-
-enum class Menu {
-    LOGIN,
-    REGISTER,
-    DIALOG,
-};
+#include <UI/ui.hpp>
 
 int main() {
     Database::getStorage()->sync_schema();
@@ -68,118 +48,16 @@ int main() {
     // }
     // --------------
     
-    LoginScreen();
+    // uwaga: ftxui nie ma świetnej dokumentacji odnośnie tego jak prawdłowo wyświetlać
+    // różne ekrany/strony, więc mogę to robić w niestandardowy i pobugowany sposób
+    // "u mnie działa", ale jeśli u was by tak nie było to dajcie znać
+    
+    // tworzy pustego usera, do ktorego zostanie wczytany zalogowany user
+    User user;
+    LoginScreen(user);
+
+    // panel glowny
+    Dashboard(user);
 
     return 0;
-}
-
-void LoginScreen() {
-    std::string login;
-    std::string password;
-
-    Component input_first_name = Input(&login, "login");
-    InputOption password_option;
-    password_option.password = true;
-    Component input_password = Input(&password, "hasło", password_option);
-
-    Component loginbutton = Button("Zaloguj się", [&] {
-        auto result = Login(login, password);
-        switch (result.status)
-        {
-            case LoginResult::SUCCESS:
-                Dashboard(result.user);
-                return result.user;
-                break;
-            case LoginResult::WRONG_PASSWORD:
-                Dialog("Niepoprawne hasło");
-                break;
-            case LoginResult::USER_NOT_FOUND:
-                Dialog("Niepoprawny login");
-                break;
-            case LoginResult::INTERNAL_ERROR:
-                Dialog("Błąd wewnętrzny");
-                break;
-        }
-    });
-
-    auto component = Container::Vertical({
-        input_first_name,
-        input_password,
-        loginbutton,
-    });
-
-    auto renderer = Renderer(component, [&] {
-        return 
-            center(
-                window(text("Logowanie"), vbox(
-                    vbox(
-                        input_first_name->Render() | borderLight,
-                        input_password->Render() | borderLight
-                    ),
-                    separator(),
-                    loginbutton->Render()
-                    )
-                ) | size(WIDTH, EQUAL, 60)
-            );
-    });
-
-    auto screen = ScreenInteractive::Fullscreen();
-    screen.Loop(renderer);
-}
-
-void Dialog(const std::string& message)
-{
-    auto screen = ScreenInteractive::Fullscreen();
-
-    auto ok_button = Button("OK", [&] {
-        screen.ExitLoopClosure()();
-    });
-
-    auto component = Container::Vertical({
-        ok_button
-    });
-
-    auto renderer = Renderer(component, [&] {
-        return 
-            center(
-                vbox(
-                    vbox(
-                        text(message)
-                    ),
-                    separator(),
-                    ok_button->Render()
-                 ) | border | size(WIDTH, EQUAL, 60)
-            );
-    });
-
-    screen.Loop(renderer);
-}
-
-void Dashboard(User user)
-{
-    auto screen = ScreenInteractive::Fullscreen();
-
-    auto logout_button = Button("Wyloguj", [&] {
-        screen.ExitLoopClosure()();
-    });
-
-    auto component = Container::Vertical({
-        logout_button
-    });
-
-    auto renderer = Renderer(component, [&] {
-        return 
-            center(
-                window(text("Dialog"), vbox(
-                    vbox(
-                        text("Witaj " + user.login)
-                    ),
-                    separator(),
-                    logout_button->Render()
-                    )
-                ) | size(WIDTH, EQUAL, 60)
-            );
-    });
-
-    screen.Loop(renderer);
 }
