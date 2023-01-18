@@ -53,11 +53,15 @@ int main() {
     // "u mnie działa", ale jeśli u was by tak nie było to dajcie znać
     
     // tworzy pustego usera, do ktorego zostanie wczytany zalogowany user
-    User user;
+    User user{};
     LoginScreen(user);
 
-    // panel glowny
-    Dashboard(user);
+    // wcisniecie ctrl+c w trakcie LoginScreen() wychodzi z funkcji zamiast zamykac program
+    // dlatego trzeba sprawdzic czy user zostal zalogowany
+    if(user.id){
+        // panel glowny
+        Dashboard(user);
+    }
 
     return 0;
 }

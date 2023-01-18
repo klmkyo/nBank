@@ -42,7 +42,7 @@ void LoginScreen(User& user) {
         }
     });
 
-    Component registerbutton = Button("Zarejestruj się", [&] {
+    Component registerbutton = Button("Utwórz Konto", [&] {
         RegisterScreen();
     });
 
@@ -107,10 +107,15 @@ void RegisterScreen() {
         }
     });
 
+    Component cancelbutton = Button("Anuluj", [&] {
+        screen.ExitLoopClosure()();
+    });
+
     auto component = Container::Vertical({
         input_first_name,
         input_password,
         input_password2,
+        cancelbutton,
         registerbutton,
     });
 
@@ -124,7 +129,10 @@ void RegisterScreen() {
                         input_password2->Render() | borderLight
                     ),
                     separator(),
-                    registerbutton->Render()
+                    hbox(
+                        cancelbutton->Render(),
+                        registerbutton->Render() | flex
+                    )
                     )
                 ) | size(WIDTH, EQUAL, 60)
             );
