@@ -43,7 +43,7 @@ void LoginScreen(User& user) {
     });
 
     Component registerbutton = Button("Utwórz Konto", [&] {
-        RegisterScreen();
+        RegisterScreen(login, password);
     });
 
     auto component = Container::Vertical({
@@ -72,11 +72,12 @@ void LoginScreen(User& user) {
     screen.Loop(renderer);
 }
 
-void RegisterScreen() {
+/// @brief Rejestruje użytkownika
+/// @param login - opcjonalny login, który zostanie wpisany do pola
+/// @param password - opcjonalne hasło, które zostanie wpisane do pola
+void RegisterScreen(std::string login = "", std::string password = "") {
     auto screen = ScreenInteractive::Fullscreen();
 
-    std::string login;
-    std::string password;
     std::string password2;
     std::string phone;
 
@@ -103,6 +104,9 @@ void RegisterScreen() {
                 break;
             case RegisterResult::INTERNAL_ERROR:
                 Dialog("Błąd wewnętrzny");
+                break;
+            case RegisterResult::FIELDS_EMPTY:
+                Dialog("Pola nie mogą być puste");
                 break;
         }
     });
@@ -177,7 +181,7 @@ void Dashboard(User& user)
 {
     auto screen = ScreenInteractive::Fullscreen();
 
-    auto logout_button = Button("Wyloguj", [&] {
+    auto logout_button = Button("Zamknij", [&] {
         screen.ExitLoopClosure()();
     });
 
