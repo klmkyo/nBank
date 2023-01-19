@@ -7,6 +7,20 @@
 #include <Repositories/user.hpp>
 #include "ui.hpp"
 
+// TODO display logo
+const std::vector<std::string> LOGO = {
+    R"(          $$$$$$$\                      $$\       )",
+    R"(          $$  __$$\                     $$ |      )",
+    R"($$$$$$$\  $$ |  $$ | $$$$$$\  $$$$$$$\  $$ |  $$\ )",
+    R"($$  __$$\ $$$$$$$\ | \____$$\ $$  __$$\ $$ | $$  |)",
+    R"($$ |  $$ |$$  __$$\  $$$$$$$ |$$ |  $$ |$$$$$$  / )",
+    R"($$ |  $$ |$$ |  $$ |$$  __$$ |$$ |  $$ |$$  _$$<  )",
+    R"($$ |  $$ |$$$$$$$  |\$$$$$$$ |$$ |  $$ |$$ | \$$\ )",
+    R"(\__|  \__|\_______/  \_______|\__|  \__|\__|  \__|)"
+};
+
+constexpr int LOGO_HEIGHT = 8;
+
 using namespace ftxui;
 
 /// @brief Loguje użytownika, zwraca jego dane do user
@@ -14,10 +28,16 @@ using namespace ftxui;
 void LoginScreen(User& user) {
     auto screen = ScreenInteractive::Fullscreen();
 
+    Elements elements;
+    // go through each line of logo, and append text(line) to elements
+    for (auto& line : LOGO) {
+        elements.push_back(text(line));
+    }
+
     std::string login;
     std::string password;
 
-    Component input_first_name = Input(&login, "login");
+    Component input_login = Input(&login, "login");
     InputOption password_option;
     password_option.password = true;
     Component input_password = Input(&password, "hasło", password_option);
@@ -47,7 +67,7 @@ void LoginScreen(User& user) {
     });
 
     auto component = Container::Vertical({
-        input_first_name,
+        input_login,
         input_password,
         loginbutton,
         registerbutton
@@ -56,9 +76,15 @@ void LoginScreen(User& user) {
     auto renderer = Renderer(component, [&] {
         return 
             center(
-                window(text("Logowanie"), vbox(
+                vbox(
+                    vbox({
+                        elements | center
+                    }) | size(HEIGHT, EQUAL, LOGO_HEIGHT),
+                    text("") | center,
+                    text("") | center,
+                    window(text("Logowanie"), vbox(
                     vbox(
-                        input_first_name->Render() | borderLight,
+                        input_login->Render() | borderLight,
                         input_password->Render() | borderLight
                     ),
                     separator(),
@@ -66,6 +92,7 @@ void LoginScreen(User& user) {
                     registerbutton->Render()
                     )
                 ) | size(WIDTH, EQUAL, 60)
+                )
             );
     });
 
@@ -78,10 +105,12 @@ void LoginScreen(User& user) {
 void RegisterScreen(std::string login = "", std::string password = "") {
     auto screen = ScreenInteractive::Fullscreen();
 
+    std::string first_name;
     std::string password2;
     std::string phone;
 
-    Component input_first_name = Input(&login, "login");
+    Component input_login = Input(&login, "login");
+    Component input_first_name = Input(&first_name, "imię");
     InputOption password_option;
     password_option.password = true;
     Component input_password = Input(&password, "hasło", password_option);
@@ -116,6 +145,7 @@ void RegisterScreen(std::string login = "", std::string password = "") {
     });
 
     auto component = Container::Vertical({
+        input_login,
         input_first_name,
         input_password,
         input_password2,
@@ -129,6 +159,7 @@ void RegisterScreen(std::string login = "", std::string password = "") {
                 window(text("Rejestracja"), vbox(
                     vbox(
                         input_first_name->Render() | borderLight,
+                        input_login->Render() | borderLight,
                         input_password->Render() | borderLight,
                         input_password2->Render() | borderLight
                     ),
@@ -189,12 +220,13 @@ void Dashboard(User& user)
         logout_button
     });
 
+    // TODO twoje konta, historia transakcji, przelew, wyloguj się
+
     auto renderer = Renderer(component, [&] {
         return 
             center(
-                window(text("Dialog"), vbox(
+                window(text("Witaj, " + user.name + "!"), vbox(
                     vbox(
-                        text("Witaj " + user.login)
                     ),
                     separator(),
                     logout_button->Render()
