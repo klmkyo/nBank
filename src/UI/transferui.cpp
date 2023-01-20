@@ -32,6 +32,8 @@ void HandleTransactionResult(const TransactionResult& result)
 // DirectTransfer(Account* account, double amount, int card_number)
 Component DirectTransferPanel(Account& account)
 {
+    // TODO! to segfaultuje ponieważ stringi są dropowane pod koniec funkcji (?)
+    // rust by to wyłapał
     std::string ammount;
     std::string card_number;
 
@@ -74,17 +76,15 @@ Component DirectTransferPanel(Account& account)
         send_button
     });
 
-    auto renderer = Renderer(component, [&] {
-        return center(
-            window(
-                text(L"Przelew bezpośredni") | bold | color(Color::Blue),
-                vbox({
-                    input_ammount->Render(),
-                    input_card_number->Render(),
-                    send_button->Render()
-                })
-            )
-        );
+    auto renderer = Renderer(component, [=] {
+        return 
+            vbox({
+                text(L"Przelew bezpośredni"),
+                // segfaultuje przez poniższe linijki
+                 input_ammount->Render(),
+                // input_card_number->Render(),
+                // send_button->Render()
+            });
     });
 
     return renderer;
@@ -139,16 +139,13 @@ Component BLIKTransferPanel(Account& account, std::function<void()> exit_func)
     });
 
     auto renderer = Renderer(component, [&] {
-        return center(
-            window(text(L"Przelew BLIK"),
-                vbox({
-                    input_ammount->Render(),
-                    input_phone_number->Render(),
-                    send_button->Render(),
-                    exit_button->Render()
-                })
-            )
-        );
+        return 
+            vbox({
+                input_ammount->Render(),
+                input_phone_number->Render(),
+                send_button->Render(),
+                exit_button->Render()
+            });
     });
 
     return renderer;
@@ -254,19 +251,16 @@ Component DepositPanel()
     });
 
     auto renderer = Renderer(component, [&] {
-        return center(
-            window(text(L"Wpłata gotówki"),
-                vbox({
-                    input_ammount->Render(),
-                    input_card_number->Render(),
-                    input_card_expiration_year->Render(),
-                    input_card_expiration_month->Render(),
-                    input_card_cvv->Render(),
-                    input_pin->Render(),
-                    send_button->Render()
-                })
-            )
-        );
+        return 
+            vbox({
+                input_ammount->Render(),
+                input_card_number->Render(),
+                input_card_expiration_year->Render(),
+                input_card_expiration_month->Render(),
+                input_card_cvv->Render(),
+                input_pin->Render(),
+                send_button->Render()
+            });
     });
 
     return renderer;
