@@ -11,10 +11,9 @@ class UserRepo
 {
     public:
     std::unique_ptr<User> GetUserById(uint32_t uid);
-    // CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, double balance, int phone_number);
-    // std::vector<Account> GetUserAccounts(uint32_t user_id);
     uint32_t InsertUser(const User& user, bool overwrite= false);
 };
+
 
 struct HashedPassword {
     std::string hash;
@@ -45,3 +44,5 @@ bool VerifyPassword(const std::string& password, const std::string& hash, const 
 std::string gen_random(const int len);
 LoginResponse Login(const std::string& login, const std::string& password);
 RegisterResult Register(const std::string& login, const std::string& name, const std::string& password);
+std::vector<Account> GetUserAccounts(uint32_t uid);
+CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, double balance, int phone_number);

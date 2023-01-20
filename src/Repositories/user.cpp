@@ -106,6 +106,35 @@ RegisterResult Register(const std::string& login, const std::string& name, const
     }
 }
 
+std::vector<Account> GetUserAccounts(uint32_t uid)
+{
+    using namespace sqlite_orm;
+    auto accounts = Database::getStorage()->get_all<Account>(where(c(&Account::user_id) == uid));
+    return accounts;
+}
+
+// tworzy rachunek dla użytkownika
+CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, double balance, int phone_number)
+{
+    using namespace sqlite_orm;
+    // sprawdź czy pola nie są puste
+    if (name.empty() || balance < 0 || phone_number < 0){
+        return CreateAccountResult::FIELDS_EMPTY;
+    }
+
+    Account acc;
+    acc.name = name;
+    acc.balance = balance;
+    acc.phone_number = phone_number;
+    acc.user_id = user_id;
+
+    auto id = Database::getStorage()->insert(acc);
+    if (id == -1){
+        return CreateAccountResult::INTERNAL_ERROR;
+    } else {
+        return CreateAccountResult::SUCCESS;
+    }
+}
 
 /// @brief Verifies password based on hash and salt
 /// @param password
@@ -132,34 +161,3 @@ std::string gen_random(const int len) {
     
     return tmp_s;
 }
-
-// std::vector<Account> UserRepo::GetUserAccounts(const uint user_id)
-// {
-//     using namespace sqlite_orm;
-
-//     std::vector<Account> accounts;
-//     // zapisz bezpośrednio do vectora
-//     Database::getStorage()->get_all<Account>(std::back_inserter(accounts), where(c(&Account::user_id) == user_id));
-
-//     return accounts;
-// }
-
-// CreateAccountResult UserRepo::CreateUserAccount(const uint32_t user_id, const std::string& name, double balance, int phone_number)
-// {
-//     if (name.empty() || balance < 0 || phone_number < 0){
-//         return CreateAccountResult::FIELDS_EMPTY;
-//     }
-
-//     Account acc;
-//     acc.name = name;
-//     acc.balance = balance;
-//     acc.phone_number = phone_number;
-//     acc.user_id = user_id;
-
-//     auto id = Database::getStorage()->insert(acc);
-//     if (id == -1){
-//         return CreateAccountResult::INTERNAL_ERROR;
-//     } else {
-//         return CreateAccountResult::SUCCESS;
-//     }
-// }

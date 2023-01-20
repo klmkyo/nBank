@@ -256,19 +256,19 @@ void CreateAccountPanel(User& user)
             return;
         }
 
-        // auto result = user.CreateAccount(name, phone_number_value, balance_value);
-        // switch (result) {
-        //     case CreateAccountResult::SUCCESS:
-        //         Dialog("Utworzono konto!");
-        //         screen.ExitLoopClosure()();
-        //         break;
-        //     case CreateAccountResult::INTERNAL_ERROR:
-        //         Dialog("Błąd wewnętrzny");
-        //         break;
-        //     case CreateAccountResult::FIELDS_EMPTY:
-        //         Dialog("Pola nie mogą być puste");
-        //         break;
-        // }
+        auto result = CreateUserAccount(user.id, name, phone_number_value, balance_value);
+        switch (result) {
+            case CreateAccountResult::SUCCESS:
+                Dialog("Utworzono konto!");
+                screen.ExitLoopClosure()();
+                break;
+            case CreateAccountResult::INTERNAL_ERROR:
+                Dialog("Błąd wewnętrzny");
+                break;
+            case CreateAccountResult::FIELDS_EMPTY:
+                Dialog("Pola nie mogą być puste");
+                break;
+        }
     });
 
     Component cancel_button = Button("Anuluj", [&] {
@@ -286,7 +286,7 @@ void CreateAccountPanel(User& user)
     auto renderer = Renderer(component, [&] {
         return 
             center(
-                window(text("Utwórz Konto"), vbox(
+                window(text("Utwórz Rachunek"), vbox(
                     vbox(
                         input_name->Render() | borderLight,
                         input_balance->Render() | borderLight,
@@ -309,7 +309,15 @@ void CreateAccountPanel(User& user)
 /// @param user - użytkownik
 void Dashboard(User& user)
 {
-    // auto accounts = user.GetAccounts();
+    auto accounts = GetUserAccounts(user.id);
+    // jeśli nie ma żadnych kont, to tworzymy je
+    while (accounts.empty()) {
+        CreateAccountPanel(user);
+        accounts = GetUserAccounts(user.id);
+    }
+
+    uint selected_account_id = 0;
+    auto selected_account = accounts[selected_account_id];
 
     auto screen = ScreenInteractive::Fullscreen();
 
@@ -329,14 +337,14 @@ void Dashboard(User& user)
                 hbox(
                     // wybór konta, tworzenie konta
                     // konto wybiera się radioboxem 
-                    vbox(
-                        // wyświetlanie konto
-
-                        // tworzenie konta
+                    window(text("Twoje konta"), vbox(
+                        vbox(
+                        ),
+                        separator(),
                         Button("Utwórz konto", [&] {
                             CreateAccountPanel(user);
                         })->Render()
-                    ),
+                    )),
 
                     // TODO twoje konta, historia transakcji, przelew
                     window(text("Witaj, " + user.name + "!"),
