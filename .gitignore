@@ -42,3 +42,4 @@ Makefile
 CMakeFiles
 src/CMakeFiles
 .idea/
+cmake-build-debug/
