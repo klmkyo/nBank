@@ -224,27 +224,12 @@ void CreateAccountPanel(User& user)
             Dialog("Nazwa konta nie może być pusta");
             return;
         }
-        if (balance.empty()) {
-            Dialog("Saldo nie może być puste");
-            return;
-        }
         if (phone_number.empty()) {
             Dialog("Numer telefonu nie może być pusty");
             return;
         }
 
         // bezpieczne rzutowanie na double balance i phone_number
-        double balance_value;
-        try {
-            balance_value = std::stod(balance);
-        } catch (const std::invalid_argument& e) {
-            Dialog("Saldo musi być liczbą");
-            return;
-        } catch (const std::out_of_range& e) {
-            Dialog("Saldo jest zbyt duże");
-            return;
-        }
-
         int phone_number_value;
         try {
             phone_number_value = std::stoi(phone_number);
@@ -256,7 +241,7 @@ void CreateAccountPanel(User& user)
             return;
         }
 
-        auto result = CreateUserAccount(user.id, name, balance_value, phone_number_value);
+        auto result = CreateUserAccount(user.id, name, phone_number_value);
         switch (result) {
             case CreateAccountResult::SUCCESS:
                 Dialog("Utworzono konto!");
@@ -334,6 +319,7 @@ void Dashboard(User& user)
 
     FlexboxConfig flexbox_config;
     flexbox_config.justify_content = FlexboxConfig::JustifyContent::SpaceBetween;
+    flexbox_config.align_items = FlexboxConfig::AlignItems::Stretch;
     flexbox_config.direction = FlexboxConfig::Direction::Row;
 
     // function that returns a Component that displays account details
@@ -343,56 +329,89 @@ void Dashboard(User& user)
         auto phone_number = std::to_string(account.phone_number);
         auto account_name = account.name;
 
+        // text(" ") - dodaje puste miejsce
         return flexbox({
+            text(" "),                    
             vbox({
                 text("Nazwa konta"),
-                text(account_name),
-            }),
-            // whitespace
-            text("  "),
+                text(account_name) | bold,
+            }) | flex,
+            text(" "),            
+            separator(),
+            text(" "),            
             vbox({
                 text("Saldo"),
-                text(balance),
-            }),
-            text("  "),
+                text(balance) | bold,
+            }) | flex,
+            text(" "),            
+            separator(),
+            text(" "),            
             vbox({
                 text("Numer telefonu"),
-                text(phone_number),
-            }),
+                text(phone_number) | bold,
+            }) | flex,
+            text(" "),                        
         }, flexbox_config);
     };
 
     auto selected_account = accounts[selected_account_id];
     auto radiobox = Radiobox(&account_names, &selected_account_id);
 
-    auto logout_button = Button("Wyjdź z programu", [&] {
+    auto make_transfer_button = Button(" ⇄ Wykonaj Przelew ", [&] {
+        // MakeTransferPanel(user, selected_account);
+        refresh_accounts();
+    });
+    auto logout_button = Button(" ✕ Wyjdź z programu ", [&] {
         screen.ExitLoopClosure()();
     });
-    auto create_account_button = Button("Utwórz konto", [&] {
+    auto create_account_button = Button(" + Nowy Rachunek ", [&] {
         CreateAccountPanel(user);
         refresh_accounts();
     });
 
-    auto component = Container::Vertical({
-        create_account_button,
-        logout_button,
-        radiobox
+    // for now it's just a placeholder
+    auto creditCardRenderer = Renderer([&] {
+        return 
+            center(vtext("<insert karta kredytowa here>"));
     });
 
-    // TODO twoje konta, historia transakcji, przelew, wyloguj się
+    // for now it's just a placeholder
+    auto historyTransactionRenderer = Renderer([&] {
+        return 
+            center(text("<insert historia transakcji here>"));
+    });
 
-    auto renderer = Renderer(component, [&] {
+    int left_size = 30;
+    auto split = ResizableSplitLeft(creditCardRenderer, historyTransactionRenderer, &left_size);
+
+    auto component = Container::Vertical({
+        radiobox,
+        split,
+        create_account_button,
+        make_transfer_button,
+        logout_button,
+    });
+
+
+    // TODO twoje konta, historia transakcji, przelew, wyloguj się
+    // TODO ResizableSplitLeft
+    auto mainRenderer = Renderer(component, [&] {
         return 
             center(
                 hbox(
                     // wybór konta, tworzenie konta
                     // konto wybiera się radioboxem 
-                    window(text("Twoje konta"), vbox(
-                        // wyświetlanie wszystkich kont
-                        radiobox->Render() | flex,
-                        separator(),
-                        create_account_button->Render()
-                    )),
+                    window(text("Twoje Rachunki"), 
+                        vbox(
+                            // wyświetlanie wszystkich kont
+                            hbox(
+                                text(" ") | size(HEIGHT, EQUAL, 1),
+                                radiobox->Render()
+                            ) | flex,
+                            separator(),
+                            create_account_button->Render()
+                        )
+                    ),
 
                     // TODO twoje konta, historia transakcji, przelew
                     window( text("Witaj, " + user.name + "!"),
@@ -400,15 +419,18 @@ void Dashboard(User& user)
                             account_details(),
                             separator(),
 
-                            center(text("<insert historia transakcji here>")) | flex,
+                            split -> Render() | flex,
 
                             separator(),
-                            logout_button->Render()
+                            hbox(
+                                make_transfer_button->Render() | flex,
+                                logout_button->Render()
+                            )
                         )
-                ) | size(WIDTH, EQUAL, 70) | size(HEIGHT, GREATER_THAN, 30)
+                ) | size(WIDTH, EQUAL, 90) | size(HEIGHT, GREATER_THAN, 40)
                 )
             );
     });
 
-    screen.Loop(renderer);
+    screen.Loop(mainRenderer);
 }

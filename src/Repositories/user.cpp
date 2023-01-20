@@ -114,17 +114,16 @@ std::vector<Account> GetUserAccounts(uint32_t uid)
 }
 
 // tworzy rachunek dla użytkownika
-CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, double balance, int phone_number)
+CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, int phone_number)
 {
     using namespace sqlite_orm;
     // sprawdź czy pola nie są puste
-    if (name.empty() || balance < 0 || phone_number < 0){
+    if (name.empty() || phone_number < 0){
         return CreateAccountResult::FIELDS_EMPTY;
     }
 
     Account acc;
     acc.name = name;
-    acc.balance = balance;
     acc.phone_number = phone_number;
     acc.user_id = user_id;
 

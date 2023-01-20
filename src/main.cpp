@@ -56,11 +56,11 @@ int main() {
     User user{};
     
     // ekran logowania
-    LoginScreen(user);
+    // LoginScreen(user);
     
     // dla debugu
-    // auto user_ptr = Repo::User()->GetUserById(1);
-    // user = *user_ptr;
+    auto user_ptr = Repo::User()->GetUserById(1);
+    user = *user_ptr;
 
     // wcisniecie ctrl+c w trakcie LoginScreen() wychodzi z funkcji zamiast zamykac program
     // dlatego trzeba sprawdzic czy user zostal zalogowany
