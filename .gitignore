@@ -41,3 +41,4 @@ build/*
 Makefile
 CMakeFiles
 src/CMakeFiles
+.idea/
