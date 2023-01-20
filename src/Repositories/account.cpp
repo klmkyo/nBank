@@ -1,4 +1,6 @@
 #include "account.hpp"
+#include "Repositories/repos.hpp"
+#include <sqlite_orm/sqlite_orm.h>
 
 /// @brief Search for account by id
 /// @param id

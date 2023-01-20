@@ -80,11 +80,11 @@ LoginResponse Login(const std::string& login, const std::string& password)
     }
 }
 
-RegisterResult Register(const std::string& login, const std::string& password)
+RegisterResult Register(const std::string& login, const std::string& name, const std::string& password)
 {
     using namespace sqlite_orm;
     // sprawdź czy pola nie są puste
-    if (login.empty() || password.empty()){
+    if (login.empty() || password.empty() || name.empty()){
         return RegisterResult::FIELDS_EMPTY;
     }
 
@@ -96,6 +96,7 @@ RegisterResult Register(const std::string& login, const std::string& password)
         // zarejestruj użytkownika
         User user;
         user.login = login;
+        user.name = name;
         auto hp = HashPassword(password);
         user.password_hash = hp.hash;
         user.password_salt = hp.salt;
@@ -133,3 +134,34 @@ std::string gen_random(const int len) {
     
     return tmp_s;
 }
+
+// std::vector<Account> UserRepo::GetUserAccounts(const uint user_id)
+// {
+//     using namespace sqlite_orm;
+
+//     std::vector<Account> accounts;
+//     // zapisz bezpośrednio do vectora
+//     Database::getStorage()->get_all<Account>(std::back_inserter(accounts), where(c(&Account::user_id) == user_id));
+
+//     return accounts;
+// }
+
+// CreateAccountResult UserRepo::CreateUserAccount(const uint32_t user_id, const std::string& name, double balance, int phone_number)
+// {
+//     if (name.empty() || balance < 0 || phone_number < 0){
+//         return CreateAccountResult::FIELDS_EMPTY;
+//     }
+
+//     Account acc;
+//     acc.name = name;
+//     acc.balance = balance;
+//     acc.phone_number = phone_number;
+//     acc.user_id = user_id;
+
+//     auto id = Database::getStorage()->insert(acc);
+//     if (id == -1){
+//         return CreateAccountResult::INTERNAL_ERROR;
+//     } else {
+//         return CreateAccountResult::SUCCESS;
+//     }
+// }

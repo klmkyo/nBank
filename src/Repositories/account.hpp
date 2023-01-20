@@ -1,3 +1,4 @@
+#pragma once
 #include "../Database/database.hpp"
 
 class AccountRepo

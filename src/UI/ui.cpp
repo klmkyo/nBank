@@ -5,6 +5,7 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/component/component.hpp>
 #include <Repositories/user.hpp>
+#include <Repositories/repos.hpp>
 #include "ui.hpp"
 
 // TODO display logo
@@ -105,12 +106,12 @@ void LoginScreen(User& user) {
 void RegisterScreen(std::string login = "", std::string password = "") {
     auto screen = ScreenInteractive::Fullscreen();
 
-    std::string first_name;
+    std::string name;
     std::string password2;
     std::string phone;
 
     Component input_login = Input(&login, "login");
-    Component input_first_name = Input(&first_name, "imię");
+    Component input_name = Input(&name, "imię");
     InputOption password_option;
     password_option.password = true;
     Component input_password = Input(&password, "hasło", password_option);
@@ -121,7 +122,7 @@ void RegisterScreen(std::string login = "", std::string password = "") {
             Dialog("Hasła nie są takie same");
             return;
         }
-        auto result = Register(login, password);
+        auto result = Register(login, name, password);
         switch (result)
         {
             case RegisterResult::SUCCESS:
@@ -145,8 +146,8 @@ void RegisterScreen(std::string login = "", std::string password = "") {
     });
 
     auto component = Container::Vertical({
+        input_name,
         input_login,
-        input_first_name,
         input_password,
         input_password2,
         cancelbutton,
@@ -158,7 +159,7 @@ void RegisterScreen(std::string login = "", std::string password = "") {
             center(
                 window(text("Rejestracja"), vbox(
                     vbox(
-                        input_first_name->Render() | borderLight,
+                        input_name->Render() | borderLight,
                         input_login->Render() | borderLight,
                         input_password->Render() | borderLight,
                         input_password2->Render() | borderLight
@@ -206,10 +207,110 @@ void Dialog(const std::string& message)
     screen.Loop(renderer);
 }
 
+void CreateAccountPanel(User& user)
+{
+    auto screen = ScreenInteractive::Fullscreen();
+
+    std::string name;
+    std::string balance;
+    std::string phone_number;
+
+    Component input_name = Input(&name, "Nazwa konta");
+    Component input_balance = Input(&balance, "Saldo początkowe");
+    Component input_phone_number = Input(&phone_number, "Numer telefonu");
+
+    Component create_button = Button("Utwórz", [&] {
+        if (name.empty()) {
+            Dialog("Nazwa konta nie może być pusta");
+            return;
+        }
+        if (balance.empty()) {
+            Dialog("Saldo nie może być puste");
+            return;
+        }
+        if (phone_number.empty()) {
+            Dialog("Numer telefonu nie może być pusty");
+            return;
+        }
+
+        // bezpieczne rzutowanie na double balance i phone_number
+        double balance_value;
+        try {
+            balance_value = std::stod(balance);
+        } catch (const std::invalid_argument& e) {
+            Dialog("Saldo musi być liczbą");
+            return;
+        } catch (const std::out_of_range& e) {
+            Dialog("Saldo jest zbyt duże");
+            return;
+        }
+
+        int phone_number_value;
+        try {
+            phone_number_value = std::stoi(phone_number);
+        } catch (const std::invalid_argument& e) {
+            Dialog("Numer telefonu musi być liczbą");
+            return;
+        } catch (const std::out_of_range& e) {
+            Dialog("Numer telefonu jest zbyt duży");
+            return;
+        }
+
+        // auto result = user.CreateAccount(name, phone_number_value, balance_value);
+        // switch (result) {
+        //     case CreateAccountResult::SUCCESS:
+        //         Dialog("Utworzono konto!");
+        //         screen.ExitLoopClosure()();
+        //         break;
+        //     case CreateAccountResult::INTERNAL_ERROR:
+        //         Dialog("Błąd wewnętrzny");
+        //         break;
+        //     case CreateAccountResult::FIELDS_EMPTY:
+        //         Dialog("Pola nie mogą być puste");
+        //         break;
+        // }
+    });
+
+    Component cancel_button = Button("Anuluj", [&] {
+        screen.ExitLoopClosure()();
+    });
+
+    auto component = Container::Vertical({
+        input_name,
+        input_balance,
+        input_phone_number,
+        create_button,
+        cancel_button
+    });
+
+    auto renderer = Renderer(component, [&] {
+        return 
+            center(
+                window(text("Utwórz Konto"), vbox(
+                    vbox(
+                        input_name->Render() | borderLight,
+                        input_balance->Render() | borderLight,
+                        input_phone_number->Render() | borderLight
+                    ),
+                    separator(),
+                    hbox(
+                        create_button->Render() | flex,
+                        cancel_button->Render()
+                    )
+                    )
+                ) | size(WIDTH, EQUAL, 60)
+            );
+    });
+
+    screen.Loop(renderer);
+}
+
 /// @brief Wyświetla panel użytkownika
 /// @param user - użytkownik
 void Dashboard(User& user)
 {
+    // auto accounts = user.GetAccounts();
+
     auto screen = ScreenInteractive::Fullscreen();
 
     auto logout_button = Button("Zamknij", [&] {
@@ -225,13 +326,23 @@ void Dashboard(User& user)
     auto renderer = Renderer(component, [&] {
         return 
             center(
-                window(text("Witaj, " + user.name + "!"), vbox(
+                hbox(
+                    // wybór konta, tworzenie konta
+                    // konto wybiera się radioboxem 
                     vbox(
+                        // wyświetlanie konto
+
+                        // tworzenie konta
+                        Button("Utwórz konto", [&] {
+                            CreateAccountPanel(user);
+                        })->Render()
                     ),
-                    separator(),
+
+                    // TODO twoje konta, historia transakcji, przelew
+                    window(text("Witaj, " + user.name + "!"),
                     logout_button->Render()
-                    )
                 ) | size(WIDTH, EQUAL, 60)
+                )
             );
     });
 
