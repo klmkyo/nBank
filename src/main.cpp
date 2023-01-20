@@ -5,6 +5,8 @@
 #include <Repositories/user.hpp>
 #include <UI/ui.hpp>
 
+#include <UI/transferui.hpp>
+
 int main() {
     Database::getStorage()->sync_schema();
 
@@ -25,9 +27,12 @@ int main() {
     std::cout << *acc2 << std::endl;
     return 0;
     */
-    
 
-      
+    // do debugowania paneli przelewów
+//    uint32_t test1 = Repo::Account()->InsertAccount(Account{-1, -1, "test1", 15.0, 1337});
+//    Account* acc = Repo::Account()->GetAccountById(test1).release();
+//    TransferPanel(*acc);
+    
 
     // tworzy nowego Usera i nowe konto
     // uint32_t newuser = Repo::User()->InsertUser(User{-1, "admin", "admin", "0123456789abcdef", "admin"});
