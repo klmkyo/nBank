@@ -18,7 +18,9 @@ Logic/transfer.cpp
 Logic/transfer.hpp
 Logic/payments.hpp
 UI/ui.hpp
-UI/ui.cpp)
+UI/ui.cpp
+UI/transferui.hpp
+UI/transferui.cpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

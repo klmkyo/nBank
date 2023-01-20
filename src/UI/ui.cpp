@@ -7,6 +7,7 @@
 #include <Repositories/user.hpp>
 #include <Repositories/repos.hpp>
 #include "ui.hpp"
+#include "transferui.hpp"
 
 // TODO display logo
 const std::vector<std::string> LOGO = {
@@ -357,8 +358,8 @@ void Dashboard(User& user)
     auto selected_account = accounts[selected_account_id];
     auto radiobox = Radiobox(&account_names, &selected_account_id);
 
-    auto make_transfer_button = Button(" ⇄ Wykonaj Przelew ", [&] {
-        // MakeTransferPanel(user, selected_account);
+    auto make_transfer_button = Button(" ⇄ Wykonaj Transfer ", [&] {
+        TransferPanel(selected_account);
         refresh_accounts();
     });
     auto logout_button = Button(" ✕ Wyjdź z programu ", [&] {

@@ -58,9 +58,11 @@ int main() {
     // ekran logowania
     // LoginScreen(user);
     
-    // dla debugu
-    auto user_ptr = Repo::User()->GetUserById(1);
-    user = *user_ptr;
+    // dla debugu, weź pierwszego usera z bazy
+    auto users = Database::getStorage()->get_all<User>();
+    if (users.size() > 0){
+        user = users[0];
+    }
 
     // wcisniecie ctrl+c w trakcie LoginScreen() wychodzi z funkcji zamiast zamykac program
     // dlatego trzeba sprawdzic czy user zostal zalogowany

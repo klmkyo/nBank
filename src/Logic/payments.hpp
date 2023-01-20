@@ -43,6 +43,9 @@ class BLIKTransfer : public Transfer {
 
 struct CreditInput {
     int number, cvv, exp_month, exp_year, pin;
+
+    CreditInput(int number, int cvv, int exp_month, int exp_year, int pin)
+    : number(number), cvv(cvv), exp_month(exp_month), exp_year(exp_year), pin(pin) {}
 };
 
 // Płatność kartą
