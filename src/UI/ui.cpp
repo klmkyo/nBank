@@ -256,7 +256,7 @@ void CreateAccountPanel(User& user)
             return;
         }
 
-        auto result = CreateUserAccount(user.id, name, phone_number_value, balance_value);
+        auto result = CreateUserAccount(user.id, name, balance_value, phone_number_value);
         switch (result) {
             case CreateAccountResult::SUCCESS:
                 Dialog("Utworzono konto!");
@@ -305,28 +305,78 @@ void CreateAccountPanel(User& user)
     screen.Loop(renderer);
 }
 
+std::vector<std::string> getAccountNames(const std::vector<Account>& accounts) {
+    std::vector<std::string> accountNames;
+    for (auto& account : accounts) {
+        accountNames.push_back(account.name);
+    }
+    return accountNames;
+}
+
 /// @brief Wyświetla panel użytkownika
 /// @param user - użytkownik
 void Dashboard(User& user)
 {
+    auto screen = ScreenInteractive::Fullscreen();
+
     auto accounts = GetUserAccounts(user.id);
+    auto account_names = getAccountNames(accounts);
+    auto refresh_accounts = [&] {
+        accounts = GetUserAccounts(user.id);
+        account_names = getAccountNames(accounts);
+    };
     // jeśli nie ma żadnych kont, to tworzymy je
     while (accounts.empty()) {
         CreateAccountPanel(user);
-        accounts = GetUserAccounts(user.id);
+        refresh_accounts();
     }
+    int selected_account_id = 0;
 
-    uint selected_account_id = 0;
+    FlexboxConfig flexbox_config;
+    flexbox_config.justify_content = FlexboxConfig::JustifyContent::SpaceBetween;
+    flexbox_config.direction = FlexboxConfig::Direction::Row;
+
+    // function that returns a Component that displays account details
+    auto account_details = [&] {
+        auto account = accounts[selected_account_id];
+        auto balance = std::to_string(account.balance);
+        auto phone_number = std::to_string(account.phone_number);
+        auto account_name = account.name;
+
+        return flexbox({
+            vbox({
+                text("Nazwa konta"),
+                text(account_name),
+            }),
+            // whitespace
+            text("  "),
+            vbox({
+                text("Saldo"),
+                text(balance),
+            }),
+            text("  "),
+            vbox({
+                text("Numer telefonu"),
+                text(phone_number),
+            }),
+        }, flexbox_config);
+    };
+
     auto selected_account = accounts[selected_account_id];
+    auto radiobox = Radiobox(&account_names, &selected_account_id);
 
-    auto screen = ScreenInteractive::Fullscreen();
-
-    auto logout_button = Button("Zamknij", [&] {
+    auto logout_button = Button("Wyjdź z programu", [&] {
         screen.ExitLoopClosure()();
+    });
+    auto create_account_button = Button("Utwórz konto", [&] {
+        CreateAccountPanel(user);
+        refresh_accounts();
     });
 
     auto component = Container::Vertical({
-        logout_button
+        create_account_button,
+        logout_button,
+        radiobox
     });
 
     // TODO twoje konta, historia transakcji, przelew, wyloguj się
@@ -338,18 +388,24 @@ void Dashboard(User& user)
                     // wybór konta, tworzenie konta
                     // konto wybiera się radioboxem 
                     window(text("Twoje konta"), vbox(
-                        vbox(
-                        ),
+                        // wyświetlanie wszystkich kont
+                        radiobox->Render() | flex,
                         separator(),
-                        Button("Utwórz konto", [&] {
-                            CreateAccountPanel(user);
-                        })->Render()
+                        create_account_button->Render()
                     )),
 
                     // TODO twoje konta, historia transakcji, przelew
-                    window(text("Witaj, " + user.name + "!"),
-                    logout_button->Render()
-                ) | size(WIDTH, EQUAL, 60)
+                    window( text("Witaj, " + user.name + "!"),
+                        vbox(
+                            account_details(),
+                            separator(),
+
+                            center(text("<insert historia transakcji here>")) | flex,
+
+                            separator(),
+                            logout_button->Render()
+                        )
+                ) | size(WIDTH, EQUAL, 70) | size(HEIGHT, GREATER_THAN, 30)
                 )
             );
     });
