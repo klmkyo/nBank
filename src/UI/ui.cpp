@@ -355,11 +355,11 @@ void Dashboard(User& user)
         }, flexbox_config);
     };
 
-    auto selected_account = accounts[selected_account_id];
     auto radiobox = Radiobox(&account_names, &selected_account_id);
 
     auto make_transfer_button = Button(" ⇄ Wykonaj Transfer ", [&] {
-        TransferPanel(selected_account);
+        // TODO segfault może być bo selected_account jest z array?
+        TransferPanel(accounts[selected_account_id]);
         refresh_accounts();
     });
     auto logout_button = Button(" ✕ Wyjdź z programu ", [&] {
