@@ -9,6 +9,8 @@
 #include <Logic/payments.hpp>
 #include "ui.hpp"
 
+#define NO_PIN_LIMIT 10.0
+
 using namespace ftxui;
 
 void HandleTransactionResult(const TransactionResult& result)
@@ -332,7 +334,7 @@ void CardTransactionPanel()
     Component input_card_expiration_year = Input(&card_expiration_year, "Rok ważności karty");
     Component input_card_expiration_month = Input(&card_expiration_month, "Miesiąc ważności karty");
     Component input_card_cvv = Input(&card_cvv, "CVV karty");
-    Component input_pin = Input(&pin, "PIN");
+    Component input_pin = Input(&pin, "PIN (wymagany powyżej " + std::to_string(NO_PIN_LIMIT) + ")");
 
     Component send_button = Button(L"Wyślij", [&]{
         if (ammount.empty()){
@@ -353,10 +355,6 @@ void CardTransactionPanel()
         }
         else if (card_cvv.empty()){
             Dialog("CVV karty nie może być pusty!");
-            return;
-        }
-        else if (pin.empty()){
-            Dialog("PIN nie może być pusty!");
             return;
         }
 
@@ -401,18 +399,28 @@ void CardTransactionPanel()
             return;
         }
 
+        if (pin.empty() && ammount_value >= NO_PIN_LIMIT){
+            Dialog("PIN nie może być pusty!");
+            return;
+        }
+
         int pin_value;
         try {
             pin_value = std::stoi(pin);
         } catch (std::invalid_argument& e) {
-            Dialog("PIN musi być liczbą!");
-            return;
+            if (ammount_value >= NO_PIN_LIMIT){
+                Dialog("PIN musi być liczbą!");
+                return;
+            } else {
+                pin_value = 0;
+            }
         }
 
         TransactionResult result;
         // CardTransaction(const CreditInput& input, double amount)
         // CreditInput(int number, int cvv, int exp_month, int exp_year, int pin)
         CardTransaction transaction(CreditInput(card_number_value, cvv_value, exp_month_value, exp_year_value, pin_value), ammount_value);
+
         transaction.Execute(result);
 
         HandleTransactionResult(result);
@@ -607,7 +615,7 @@ void TransferPanel(Account& account)
         BLIKTransferPanel(account);
     });
 
-    auto card_transfer_button = Button(L"Przelew kartą kredytową", [&]{
+    auto card_transfer_button = Button(L"Płatność kartą", [&]{
         CardTransactionPanel();
     });
 

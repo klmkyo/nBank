@@ -72,6 +72,9 @@ class CardTransaction : public Transaction {
         delete this->account;
         this->account = nullptr;
     }
+    bool doesRequirePin() const {
+        return this->requirePin;
+    }
 };
 
 // Wypłata (z karty)
