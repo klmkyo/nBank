@@ -436,7 +436,7 @@ void CardTransactionPanel()
     auto renderer = Renderer(component, [&] {
         return 
             center(
-                window(text(L"Przelew BLIK"), vbox({
+                window(text("Przelew kartą kredytową"), vbox({
                     input_ammount->Render() | borderLight,
                     input_card_number->Render() | borderLight,
                     input_card_expiration_year->Render() | borderLight,
