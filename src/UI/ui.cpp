@@ -254,6 +254,9 @@ void CreateAccountPanel(User& user)
             case CreateAccountResult::FIELDS_EMPTY:
                 Dialog("Pola nie mogą być puste");
                 break;
+            case CreateAccountResult::PHONE_NUMBER_EXISTS:
+                Dialog("Konto z podanym numerem telefonu już istnieje");
+                break;
         }
     });
 
@@ -291,6 +294,91 @@ void CreateAccountPanel(User& user)
     screen.Loop(renderer);
 }
 
+void CreateCreditCardPanel(Account& account)
+{
+    auto screen = ScreenInteractive::Fullscreen();
+
+    std::string name;
+    std::string pin;
+
+    Component input_name = Input(&name, "Nazwa karty");
+    Component input_pin = Input(&pin, "PIN");
+
+    Component create_button = Button("Utwórz", [&] {
+        if (name.empty()) {
+            Dialog("Nazwa karty nie może być pusta");
+            return;
+        }
+
+        if (pin.empty()) {
+            Dialog("PIN nie może być pusty");
+            return;
+        }
+
+        if (pin.length() != 4) {
+            Dialog("PIN musi mieć 4 cyfry");
+            return;
+        }
+
+        // bezpieczne na int pin
+        int pin_value;
+        try {
+            pin_value = std::stoi(pin);
+        } catch (const std::invalid_argument& e) {
+            Dialog("PIN musi być liczbą");
+            return;
+        } catch (const std::out_of_range& e) {
+            Dialog("PIN jest zbyt duży");
+            return;
+        }
+
+        auto result = CreateCreditCard(account.id, name, pin_value);
+        switch (result) {
+            case CreateCreditCardResult::SUCCESS:
+                Dialog("Utworzono kartę! Jej szczegóły znajdziesz w zakładce 'Karty Kredytowe'");
+                screen.ExitLoopClosure()();
+                break;
+            case CreateCreditCardResult::INTERNAL_ERROR:
+                Dialog("Błąd wewnętrzny");
+                break;
+            case CreateCreditCardResult::FIELDS_EMPTY:
+                Dialog("Pola nie mogą być puste");
+                break;
+        }
+    });
+
+    Component cancel_button = Button("Anuluj", [&] {
+        screen.ExitLoopClosure()();
+    });
+
+    auto component = Container::Vertical({
+        input_name,
+        input_pin,
+        create_button,
+        cancel_button
+    });
+
+    auto renderer = Renderer(component, [&] {
+        return 
+            center(
+                window(text("Utwórz Kartę Kredytową"), vbox(
+                    vbox(
+                        input_name->Render() | borderLight,
+                        input_pin->Render() | borderLight
+                    ),
+                    separator(),
+                    hbox(
+                        create_button->Render() | flex,
+                        cancel_button->Render()
+                    )
+                    )
+                ) | size(WIDTH, EQUAL, 60)
+            );
+    });
+
+    screen.Loop(renderer);
+}
+
 std::vector<std::string> getAccountNames(const std::vector<Account>& accounts) {
     std::vector<std::string> accountNames;
     for (auto& account : accounts) {
@@ -299,24 +387,50 @@ std::vector<std::string> getAccountNames(const std::vector<Account>& accounts) {
     return accountNames;
 }
 
+std::vector<std::string> getCreditCardNames(const std::vector<CreditCard>& credit_cards) {
+    std::vector<std::string> creditCardNames;
+    for (auto& credit_card : credit_cards) {
+        creditCardNames.push_back(credit_card.name);
+    }
+    return creditCardNames;
+}
+
 /// @brief Wyświetla panel użytkownika
 /// @param user - użytkownik
 void Dashboard(User& user)
 {
+
     auto screen = ScreenInteractive::Fullscreen();
 
+    int selected_account_id = 0;
     auto accounts = GetUserAccounts(user.id);
     auto account_names = getAccountNames(accounts);
-    auto refresh_accounts = [&] {
+
+    // potrzebne dla poniższego while loopa
+    auto refresh_data_accounts_only = [&] {
         accounts = GetUserAccounts(user.id);
         account_names = getAccountNames(accounts);
     };
+
     // jeśli nie ma żadnych kont, to tworzymy je
     while (accounts.empty()) {
         CreateAccountPanel(user);
-        refresh_accounts();
+        refresh_data_accounts_only();
     }
-    int selected_account_id = 0;
+
+    int selected_credit_card_id = 0;
+    auto credit_cards = GetCreditCardsByAccountId(accounts[selected_account_id].id);
+    auto credit_card_names = getCreditCardNames(credit_cards);
+
+    auto refresh_data_cards_only = [&] {
+        credit_cards = GetCreditCardsByAccountId(accounts[selected_account_id].id);
+        credit_card_names = getCreditCardNames(credit_cards);
+    };
+
+    auto refresh_data = [&] {
+        refresh_data_accounts_only();
+        refresh_data_cards_only();
+    };
 
     FlexboxConfig flexbox_config;
     flexbox_config.justify_content = FlexboxConfig::JustifyContent::SpaceBetween;
@@ -360,20 +474,72 @@ void Dashboard(User& user)
     auto make_transfer_button = Button(" ⇄ Wykonaj Transfer ", [&] {
         // TODO segfault może być bo selected_account jest z array?
         TransferPanel(accounts[selected_account_id]);
-        refresh_accounts();
+        refresh_data();
     });
     auto logout_button = Button(" ✕ Wyjdź z programu ", [&] {
         screen.ExitLoopClosure()();
     });
     auto create_account_button = Button(" + Nowy Rachunek ", [&] {
         CreateAccountPanel(user);
-        refresh_accounts();
+        refresh_data();
+    });
+
+    auto create_credit_card_button = Button(" + Nowa Karta Kredytowa ", [&] {
+        CreateCreditCardPanel(accounts[selected_account_id]);
+        refresh_data();
+    });
+
+    auto credit_card_radiobox = Radiobox(&credit_card_names, &selected_credit_card_id);
+
+    auto credit_card_component = Container::Vertical({
+        credit_card_radiobox,
+        create_credit_card_button
     });
 
     // for now it's just a placeholder
-    auto creditCardRenderer = Renderer([&] {
+    auto creditCardRenderer = Renderer(credit_card_component, [&] {
+        refresh_data_cards_only();
+
+        if(credit_cards.empty()){
+            return 
+                center(
+                    vbox(
+                        text("Karty Kredytowe:") | bold,
+                        vbox(text("Brak kart kredytowych!")) | flex,
+                        separator(),
+                        create_credit_card_button->Render()
+                    )
+                );
+        }
+
         return 
-            center(vtext("<insert karta kredytowa here>"));
+            center(
+                vbox(
+                    text("Karty Kredytowe:") | bold,
+                    // radio box
+                    credit_card_radiobox->Render(),
+                    separator(),
+                    hbox(vbox(
+                        // display the credit card details
+                        text("Nazwa karty: ") | bold,
+                        text(credit_cards[selected_credit_card_id].name),
+                        text(""),
+                        text("Numer karty: ") | bold,
+                        text(std::to_string(credit_cards[selected_credit_card_id].pin)),
+                        text(""),
+                        text("CVV: ") | bold,
+                        text(std::to_string(credit_cards[selected_credit_card_id].cvv)),
+                        text(""),
+                        text("Data ważności: ") | bold,
+                        text(std::to_string(credit_cards[selected_credit_card_id].expiration_month) + "/" + std::to_string(credit_cards[selected_credit_card_id].expiration_year)),
+                        text(""),
+                        text("Pin: ") | bold,
+                        text(std::to_string(credit_cards[selected_credit_card_id].pin))
+                    )) | flex,
+                    separator(),
+                    create_credit_card_button -> Render()
+                )
+            );
     });
 
     // for now it's just a placeholder

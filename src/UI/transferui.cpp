@@ -625,9 +625,9 @@ void TransferPanel(Account& account)
 
     auto component = Container::Horizontal({
         direct_transfer_button,
-        withdraw_transfer_button,
         blik_transfer_button,
         card_transfer_button,
+        withdraw_transfer_button,
         deposit_transfer_button,
         exit_button
     });

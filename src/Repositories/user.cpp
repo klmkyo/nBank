@@ -127,6 +127,12 @@ CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string&
     acc.phone_number = phone_number;
     acc.user_id = user_id;
 
+    // sprawdź czy numer telefonu jest unikalny
+    auto accounts = Database::getStorage()->get_all<Account>(where(c(&Account::phone_number) == phone_number));
+    if (accounts.size() > 0){
+        return CreateAccountResult::PHONE_NUMBER_EXISTS;
+    }
+
     auto id = Database::getStorage()->insert(acc);
     if (id == -1){
         return CreateAccountResult::INTERNAL_ERROR;

@@ -5,7 +5,8 @@
 enum class CreateAccountResult {
     SUCCESS,
     FIELDS_EMPTY,
-    INTERNAL_ERROR
+    INTERNAL_ERROR,
+    PHONE_NUMBER_EXISTS
 };
 class UserRepo
 {

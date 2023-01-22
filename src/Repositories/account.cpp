@@ -1,7 +1,8 @@
-#include "account.hpp"
 #include "Repositories/repos.hpp"
 #include <sqlite_orm/sqlite_orm.h>
 #include "UI/transferui.hpp"
+#include "account.hpp"
+#include "creditcard.hpp"
 
 /// @brief Search for account by id
 /// @param id
@@ -54,4 +55,87 @@ bool AccountRepo::UpdateAccount(const Account& account)
     } else {
         return false; // account not found
     }
+}
+
+std::string gen_random_num(const int len) {
+    std::string tmp_s;
+    static const char alphanum[] =
+        "0123456789";
+
+    srand((unsigned) time(NULL));
+
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i)
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+
+    return tmp_s;
+}
+
+/// @brief Create new credit card for user
+/// @param account_id
+/// @param pin
+CreateCreditCardResult CreateCreditCard(int account_id, std::string name, int pin)
+{
+    using namespace sqlite_orm;
+
+    if (name.empty()){
+        return FIELDS_EMPTY;
+    }
+
+    // check if pin is 4 digits
+    if (pin < 1000 || pin > 9999){
+        return FIELDS_EMPTY;
+    }
+
+    // get account
+    auto account = Repo::Account()->GetAccountById(account_id);
+
+    if (account){
+        CreditCard card;
+        card.pin = pin;
+        card.account_id = account_id;
+        card.name = name;
+
+        // cvv is a 3 digit number
+        card.cvv = std::stoi(gen_random_num(3));
+
+        // expiration date is 5 years from now
+        auto five_years = std::chrono::system_clock::now() + std::chrono::hours(24*365*5);
+
+        // extract year and month from time_point
+        auto time_t = std::chrono::system_clock::to_time_t(five_years);
+        auto tm = *std::localtime(&time_t);
+        card.expiration_year = tm.tm_year + 1900;
+        card.expiration_month = tm.tm_mon + 1;
+
+        // randomly generate card number (unique), and cvv
+        int number;
+        while (true) {
+            number = std::stoi(gen_random_num(8));
+            auto results = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::number) == card.number));
+            if (results.empty()){
+                break;
+            }
+        }
+        card.number = number;
+
+        try{
+            Repo::CreditCard()->InsertCreditCard(card);
+        } catch(...){
+            return INTERNAL_ERROR;
+        }
+        return SUCCESS;
+    } else {
+        return INTERNAL_ERROR;
+    }
+}
+
+std::vector<CreditCard> GetCreditCardsByAccountId(int account_id){
+    using namespace sqlite_orm;
+
+    // TODO! w bazie danych "number" karty jest prawidłowy, natomiast 
+    // w tej funkcji jest on rowny pinowi
+    auto cards = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::account_id) == account_id));
+    return cards;
 }
