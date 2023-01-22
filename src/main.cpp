@@ -1,11 +1,10 @@
 #include <iostream>
 #include <sqlite3.h>
-#include <Database/database.hpp>
-#include <Repositories/repos.hpp>
-#include <Repositories/user.hpp>
-#include <UI/ui.hpp>
-
-#include <UI/transferui.hpp>
+#include "Database/database.hpp"
+#include "Repositories/repos.hpp"
+#include "Repositories/user.hpp"
+#include "UI/ui.hpp"
+#include "UI/transferui.hpp"
 
 int main() {
     Database::getStorage()->sync_schema();
