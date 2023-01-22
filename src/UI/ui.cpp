@@ -525,7 +525,7 @@ void Dashboard(User& user)
                         text(credit_cards[selected_credit_card_id].name),
                         text(""),
                         text("Numer karty: ") | bold,
-                        text(std::to_string(credit_cards[selected_credit_card_id].pin)),
+                        text(std::to_string(credit_cards[selected_credit_card_id].number)),
                         text(""),
                         text("CVV: ") | bold,
                         text(std::to_string(credit_cards[selected_credit_card_id].cvv)),

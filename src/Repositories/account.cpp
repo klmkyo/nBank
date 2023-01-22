@@ -134,8 +134,6 @@ CreateCreditCardResult CreateCreditCard(int account_id, std::string name, int pi
 std::vector<CreditCard> GetCreditCardsByAccountId(int account_id){
     using namespace sqlite_orm;
 
-    // TODO! w bazie danych "number" karty jest prawidłowy, natomiast 
-    // w tej funkcji jest on rowny pinowi
     auto cards = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::account_id) == account_id));
     return cards;
 }
