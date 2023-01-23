@@ -45,8 +45,8 @@ class StructureBuilder {
                         make_column("pin", &CreditCard::pin)),
                 make_table<TransactionData>("transactions",
                         make_column("id", &TransactionData::id, autoincrement(), primary_key()),
-                        make_column("sender_id", &TransactionData::sender_id),
-                        make_column("recipent_id", &TransactionData::recipent_id),
+                        make_column("sender_account_id", &TransactionData::sender_account_id),
+                        make_column("recipient_account_id", &TransactionData::recipient_account_id),
                         make_column("amount", &TransactionData::amount)));
     };
 };

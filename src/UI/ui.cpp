@@ -406,15 +406,15 @@ Elements TransactionHistory(const std::vector<TransactionData>& transactions, in
     std::vector<Element> transaction_components;
 
     for (auto& transaction : transactions) {
-        auto sender_account = Database::getStorage() -> get<Account>(transaction.sender_id);
+        auto sender_account = Database::getStorage() -> get<Account>(transaction.sender_account_id);
         auto sender_user = Database::getStorage() -> get<User>(sender_account.user_id);
-        auto recipient_account = Database::getStorage() -> get<Account>(transaction.recipent_id);
+        auto recipient_account = Database::getStorage() -> get<Account>(transaction.recipient_account_id);
         auto recipient_user = Database::getStorage() -> get<User>(recipient_account.user_id);
 
         // show either as sent or received
         // when sent, display ammount in red
         // when received, display ammount in green
-        if (transaction.sender_id == account_id) {
+        if (transaction.sender_account_id == account_id) {
             transaction_components.push_back(
                 text(" Wysłano " + std::to_string(transaction.amount) + " zł do " + recipient_user.name + " (" + recipient_account.name + ") ") | color(Color::Red)
             );
