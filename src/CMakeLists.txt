@@ -1,7 +1,7 @@
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 SET (SOURCE_FILES main.cpp 
-Database/database.hpp 
+Database/Database.hpp 
 Database/structures.hpp 
 Repositories/user.hpp 
 Repositories/user.cpp
