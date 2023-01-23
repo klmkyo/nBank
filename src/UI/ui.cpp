@@ -242,19 +242,23 @@ void CreateAccountPanel(User& user)
             return;
         }
 
-        auto result = CreateUserAccount(user.id, name, phone_number_value);
+        //auto result = CreateUserAccount(user.id, name, phone_number_value);
+        AccountValuesCheckStatus result = Account::checkAccountValues(user.id, name, phone_number_value);
+                        Account acc {user.id, name, 0, phone_number_value};
+
         switch (result) {
-            case CreateAccountResult::SUCCESS:
+            case AccountValuesCheckStatus::SUCCESS:
+                Repo<Account>::Insert(acc);
                 Dialog("Utworzono konto!");
                 screen.ExitLoopClosure()();
                 break;
-            case CreateAccountResult::INTERNAL_ERROR:
-                Dialog("Błąd wewnętrzny");
-                break;
-            case CreateAccountResult::FIELDS_EMPTY:
+            //case AccountValuesCheckStatus::INTERNAL_ERROR:
+            //    Dialog("Błąd wewnętrzny");
+            //    break;
+            case AccountValuesCheckStatus::FIELDS_EMPTY:
                 Dialog("Pola nie mogą być puste");
                 break;
-            case CreateAccountResult::PHONE_NUMBER_EXISTS:
+            case AccountValuesCheckStatus::PHONE_NUMBER_EXISTS:
                 Dialog("Konto z podanym numerem telefonu już istnieje");
                 break;
         }

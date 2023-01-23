@@ -1,6 +1,10 @@
 #pragma once
 #include <sqlite_orm/sqlite_orm.h>
-#include "structures.hpp"
+#include "Database/User.hpp"
+#include "Database/Account.hpp"
+#include "Database/CreditCard.hpp"
+#include "Database/TransactionData.hpp"
+
 
 #define DB_PATH "db.sqlite"
 

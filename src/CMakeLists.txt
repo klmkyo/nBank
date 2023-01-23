@@ -2,7 +2,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 SET (SOURCE_FILES main.cpp 
 Database/Database.hpp 
-Database/structures.hpp 
+Database/Account.hpp
+Database/Account.cpp
+Database/CreditCard.hpp
+Database/User.hpp
+Database/TransactionData.hpp
+Database/TransactionData.cpp
+
 Repositories/user.hpp 
 Repositories/user.cpp
 Repositories/account.hpp

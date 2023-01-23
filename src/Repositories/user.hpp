@@ -10,6 +10,9 @@ enum class CreateAccountResult {
     PHONE_NUMBER_EXISTS
 };
 
+
+
+
 enum class LoginResult {
     SUCCESS,
     WRONG_PASSWORD,

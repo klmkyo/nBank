@@ -16,9 +16,8 @@ public:
         return Database::getStorage()->get_pointer<T>(id) ? true : false; 
     }
 
-    // template <class U>
-    // static std::vector<T> GetAllMatching(U a, int f) {
-    //     return Database::getStorage()->get_all<T>(sqlite_orm::where(sqlite_orm::c(a) == &f));
+    // static std::vector<T> GetAllMatching(int T::* a, int f) {
+    //     return Database::getStorage()->get_all<T>(sqlite_orm::where(sqlite_orm::c(a) == f));
     // }
 
     static uint32_t Insert(const T& t) {
