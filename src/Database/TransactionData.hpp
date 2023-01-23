@@ -13,4 +13,7 @@ public:
 
   TransactionData(uint32_t sender_id, uint32_t recipent_id, double amount);
   TransactionData(const Account& sender, const Account& recipent, double amount);
+
+  // empty constructor for sqlite_orm
+  TransactionData() = default;
 };

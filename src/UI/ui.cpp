@@ -247,7 +247,7 @@ void CreateAccountPanel(User& user)
 
         switch (result) {
             case AccountValuesCheckStatus::SUCCESS: {
-                Account acc {user.id, name, 0, phone_number_value};
+                Account acc {static_cast<uint32_t>(user.id), name, 0, phone_number_value};
                 Repo<Account>::Insert(acc);
                 Dialog("Utworzono konto!");
                 screen.ExitLoopClosure()();
@@ -400,6 +400,36 @@ std::vector<std::string> getCreditCardNames(const std::vector<CreditCard>& credi
     return creditCardNames;
 }
 
+// TransactionData(uint32_t sender_id, uint32_t recipent_id, double amount)
+Elements TransactionHistory(const std::vector<TransactionData>& transactions, int account_id)
+{
+    std::vector<Element> transaction_components;
+
+    for (auto& transaction : transactions) {
+        auto sender_account = Database::getStorage() -> get<Account>(transaction.sender_id);
+        auto sender_user = Database::getStorage() -> get<User>(sender_account.user_id);
+        auto recipient_account = Database::getStorage() -> get<Account>(transaction.recipent_id);
+        auto recipient_user = Database::getStorage() -> get<User>(recipient_account.user_id);
+
+        // show either as sent or received
+        // when sent, display ammount in red
+        // when received, display ammount in green
+        if (transaction.sender_id == account_id) {
+            transaction_components.push_back(
+                text(" Wysłano " + std::to_string(transaction.amount) + " zł do " + recipient_user.name + " (" + recipient_account.name + ") ") | color(Color::Red)
+            );
+        } else {
+            transaction_components.push_back(
+                text(" Otrzymano " + std::to_string(transaction.amount) + " zł od " + sender_user.name + " (" + sender_account.name + ") ") | color(Color::Green)
+            );
+        }
+
+        transaction_components.push_back(separator());
+    }
+
+    return transaction_components;
+}
+
 /// @brief Wyświetla panel użytkownika
 /// @param user - użytkownik
 void Dashboard(User& user)
@@ -432,7 +462,16 @@ void Dashboard(User& user)
         credit_card_names = getCreditCardNames(credit_cards);
     };
 
+    auto transactions = GetTransactionsByAccountId(accounts[selected_account_id].id);
+    auto transaction_elements = TransactionHistory(transactions, accounts[selected_account_id].id);
+
+    auto refresh_data_transactions_only = [&] {
+        transactions = GetTransactionsByAccountId(accounts[selected_account_id].id);
+        transaction_elements = TransactionHistory(transactions, accounts[selected_account_id].id);
+    };
+
     auto refresh_data = [&] {
+        refresh_data_transactions_only();
         refresh_data_accounts_only();
         refresh_data_cards_only();
     };
@@ -549,8 +588,9 @@ void Dashboard(User& user)
 
     // for now it's just a placeholder
     auto historyTransactionRenderer = Renderer([&] {
+        refresh_data_transactions_only();
         return 
-            center(text("<insert historia transakcji here>"));
+            vbox(transaction_elements) | flex;
     });
 
     int left_size = 30;

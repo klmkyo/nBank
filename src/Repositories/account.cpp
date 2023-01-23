@@ -69,3 +69,11 @@ std::vector<CreditCard> GetCreditCardsByAccountId(int account_id){
     auto cards = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::account_id) == account_id));
     return cards;
 }
+
+std::vector<TransactionData> GetTransactionsByAccountId(int account_id){
+    using namespace sqlite_orm;
+
+    // recepient id or sender id has to be equal to account_id
+    auto transactions = Database::getStorage()->get_all<TransactionData>(where(c(&TransactionData::recipent_id) == account_id || c(&TransactionData::sender_id) == account_id));
+    return transactions;
+}

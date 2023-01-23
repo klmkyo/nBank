@@ -58,7 +58,14 @@ int main() {
     User user{};
     
     // ekran logowania
-    LoginScreen(user);
+    // LoginScreen(user);
+
+    // dla debugu, przelew między kontami w tym samym userze
+    auto account_source = Database::getStorage()->get<Account>(1);
+
+    DirectTransfer t = DirectTransfer(&account_source, 5.0, 12546724);
+    TransactionResult tr;
+    t.Execute(tr); // wykonuje przelew
     
     // dla debugu, weź pierwszego usera z bazy
     // auto users = Database::getStorage()->get_all<User>();
