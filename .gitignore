@@ -43,3 +43,6 @@ CMakeFiles
 src/CMakeFiles
 .idea/
 cmake-build-debug/
+
+# Log files
+.log

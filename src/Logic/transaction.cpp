@@ -1,8 +1,26 @@
 #include "Logic/transaction.hpp"
 
+
+
 Transaction::Transaction(Account* account, double amount){
     this->account = account;
     this->amount = amount;
+}
+
+std::string Transaction::ResultToString(const TransactionResult& tr) {
+    switch (tr){
+        case TransactionResult::ACCOUNT_NOT_FOUND:
+        return "account not found";
+        
+        case TransactionResult::WRONG_PIN:
+        return "wrong pin";
+
+        case TransactionResult::NO_MONEY:
+        return "not enough money";
+
+        default:
+        return "success";
+    }
 }
 
 bool Transaction::CheckExecute(TransactionResult& result){
@@ -26,8 +44,9 @@ bool Transaction::Execute(TransactionResult& result){
     if (this->CheckExecute(result)){
         this->account->balance += this->amount;
         Repo<Account>::Update(*(this->account));
-        // TODO: log transaction ?
-        return true;
     }
-    return false;
+    bool ret = result == TransactionResult::SUCCESS;
+    resultString = ResultToString(result);
+    LogAction(ret);
+    return ret;
 }

@@ -12,6 +12,8 @@ Transfer::Transfer(Account* account, double amount, Account* recipient)
 bool Transfer::Execute(TransactionResult& result) {
     if (this->recipient == nullptr){
         result = TransactionResult::ACCOUNT_NOT_FOUND;
+        resultString = ResultToString(result);
+        LogAction(false);
         return false;
     }
     // checks and executes internal transaction first, only then transfers the money
