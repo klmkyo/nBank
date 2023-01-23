@@ -51,9 +51,8 @@ public:
         //if (Repo<T>::Exist(id)) {
             try {
                 Database::getStorage()->update(t);
-                id = t.id;
-            } catch(...) {
-                return -1;
+            } catch(...){
+                return false;
             }
         //}
 
