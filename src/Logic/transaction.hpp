@@ -10,6 +10,9 @@ enum class TransactionResult {
     SUCCESS
 };
 
+
+/// @brief Default use case of Transaction class is removing specified amount from the account.
+/// fe: with Transaction(&acc, 15) constructor call, 'Execute' call will remove 15 PLN from the account
 class Transaction : LoggedOperation {
 
 protected:

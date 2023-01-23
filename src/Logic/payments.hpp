@@ -4,10 +4,11 @@
 #include "Logic/transfer.hpp"
 
 
-// Do ilu pln płatność kartą nie wymaga podawania pinu
+// Below this amount, transactions do not require the pin input
 #define NO_PIN_LIMIT 10.0
 
-// Zwykły przelew na numer konta (numer karty połączonej z kontem)
+/// @brief DirectTransfer is a type of Transfer, where the 2nd account (recipient)
+/// is searched for by his card number.
 class DirectTransfer : public Transfer {
     private:
     int card_number;
@@ -44,7 +45,8 @@ class DirectTransfer : public Transfer {
     }
 };
 
-// Przelew na telefon (BLIK)
+/// @brief BLIKTransfer is a type of Transfer, where the 2nd account (recipient)
+/// is searched for by his phone number
 class BLIKTransfer : public Transfer {
     private:
     int phone_number;
@@ -88,7 +90,8 @@ struct CreditInput {
     : number(number), cvv(cvv), exp_month(exp_month), exp_year(exp_year), pin(pin) {}
 };
 
-// Płatność kartą
+/// @brief CardTransaction is a classic card payment. It looks for account matching specified card info,
+/// and takes some money from it.
 class CardTransaction : public Transaction {
     public:
     CardTransaction(const CreditInput& input, double amount)
@@ -134,7 +137,8 @@ class CardTransaction : public Transaction {
     }
 };
 
-// Wypłata (z karty)
+/// @brief WithdrawTransaction takes the credit info, links it with user's account, and
+/// withdraws the amount of money from it
 class WithdrawTransaction : public Transaction {
     public:
     WithdrawTransaction(const CreditInput& input, double amount)
@@ -175,7 +179,8 @@ class WithdrawTransaction : public Transaction {
     }
 };
 
-// Wpłata (na karte)
+/// @brief DepositTransaction takes the credit info, links it with user's account, and
+/// deposits the amount of money
 class DepositTransaction : public Transaction {
     public:
     DepositTransaction(const CreditInput& input, double amount)

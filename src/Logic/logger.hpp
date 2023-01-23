@@ -20,8 +20,9 @@ inline std::tm localtime_xp(std::time_t timer)
     return bt;
 }
 
-// Abstract class
-// derived classes should override GetLogMessage()
+/// @brief Abstract class for handling text logger output
+/// derived classes should override GetLogMessage(), also it
+/// should trigger LogAction() method in one of it's members.
 class LoggedOperation {
 protected:
     virtual std::string GetLogMessage(bool success) = 0;
