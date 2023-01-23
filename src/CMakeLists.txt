@@ -17,6 +17,7 @@ Logic/transaction.cpp
 Logic/transfer.cpp
 Logic/transfer.hpp
 Logic/payments.hpp
+Logic/logger.hpp
 UI/ui.hpp
 UI/ui.cpp
 UI/transferui.hpp
