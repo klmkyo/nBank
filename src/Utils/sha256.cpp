@@ -1,4 +1,4 @@
-#include "sha256.hpp"
+#include "Utils/sha256.hpp"
 #include <cstring>
 #include <sstream>
 #include <iomanip>
@@ -175,16 +175,4 @@ std::string SHA256::toString(const uint8_t *digest)
 	}
 
 	return s.str();
-}
-
-std::string simple_sha256_hash(const std::string& input)
-{
-	SHA256 sha;
-	sha.update(input);
-	uint8_t* digest = sha.digest();
-	std::string output = sha.toString(digest);
-
-	delete[] digest; // Don't forget to free the digest!
-
-	return output;
 }

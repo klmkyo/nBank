@@ -1,8 +1,6 @@
-#include <Repositories/user.hpp>
-#include <Repositories/repos.hpp>
-
-#ifndef _TRANSACTION_HEADER
-#define _TRANSACTION_HEADER
+#pragma once
+#include "Repositories/user.hpp"
+#include "Repositories/repos.hpp"
 
 enum class TransactionResult {
     ACCOUNT_NOT_FOUND,
@@ -13,22 +11,18 @@ enum class TransactionResult {
 
 class Transaction {
 
-    protected:
+protected:
     double amount = 0.0;
     Account* account = nullptr;
     bool requirePin = false;
-    bool wrongPin = true;
-    
+    bool wrongPin = true;    
 
-    public:
+public:
     Transaction(){};
     Transaction(double amount){this->amount = amount;};
     Transaction(Account* account, double amount);
 
     virtual bool CheckExecute(TransactionResult& result);
-
     virtual bool Execute(TransactionResult& result);
-
 };
 
-#endif

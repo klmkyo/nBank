@@ -1,10 +1,9 @@
+#pragma once
 #include <sqlite_orm/sqlite_orm.h>
 #include "structures.hpp"
 
 #define DB_PATH "db.sqlite"
 
-#ifndef _DATABASE_HEADER
-#define _DATABASE_HEADER
 
 /* Storage type built in StructureBuilder */
 typedef decltype(StructureBuilder::_build_structure()) Storage;
@@ -25,4 +24,3 @@ class Database
     };
 };
 
-#endif

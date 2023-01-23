@@ -1,8 +1,6 @@
-#include "transfer.hpp"
+#pragma once
 #include <iostream>
-
-#ifndef _PAYMENTS_HEADER
-#define _PAYMENTS_HEADER
+#include "Logic/transfer.hpp"
 
 // Do ilu pln płatność kartą nie wymaga podawania pinu
 #define NO_PIN_LIMIT 10.0
@@ -16,7 +14,8 @@ class DirectTransfer : public Transfer {
         auto cards = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::number) == card_number));
         if (cards.size() < 1)
             return; // card not found
-        this->recipient = Repo::Account()->GetAccountById(cards[cards.size()-1].account_id).release();
+        //this->recipient = Repo::Account()->GetAccountById(cards[cards.size()-1].account_id).release();
+        recipient = Repo<Account>::GetById(cards[cards.size() - 1].account_id).release();
     }
     ~DirectTransfer(){
         delete this->recipient;
@@ -33,7 +32,8 @@ class BLIKTransfer : public Transfer {
         auto accounts = Database::getStorage()->get_all<Account>(where(c(&Account::phone_number) == phone_number));
         if (accounts.size() < 1)
             return; // account not found
-        this->recipient = Repo::Account()->GetAccountById(accounts[accounts.size()-1].id).release();
+        //this->recipient = Repo::Account()->GetAccountById(accounts[accounts.size()-1].id).release();
+        recipient = Repo<Account>::GetById(accounts[accounts.size() - 1].id).release();
     }
     ~BLIKTransfer(){
         delete this->recipient;
@@ -66,7 +66,9 @@ class CardTransaction : public Transaction {
             this->requirePin = true;
             this->wrongPin = input.pin != c.pin;
         }
-        this->account = Repo::Account()->GetAccountById(c.account_id).release();
+        //this->account = Repo::Account()->GetAccountById(c.account_id).release();
+        account = Repo<Account>::GetById(c.account_id).release();
+
     }
     ~CardTransaction(){
         delete this->account;
@@ -93,7 +95,9 @@ class WithdrawTransaction : public Transaction {
             return;
         this->requirePin = true;
         this->wrongPin = input.pin != c.pin;
-        this->account = Repo::Account()->GetAccountById(c.account_id).release();
+        //this->account = Repo::Account()->GetAccountById(c.account_id).release();
+        account = Repo<Account>::GetById(c.account_id).release();
+
     }
     ~WithdrawTransaction(){
         delete this->account;
@@ -117,12 +121,11 @@ class DepositTransaction : public Transaction {
             return;
         this->requirePin = true;
         this->wrongPin = input.pin != c.pin;
-        this->account = Repo::Account()->GetAccountById(c.account_id).release();
+        //this->account = Repo::Account()->GetAccountById(c.account_id).release();
+        account = Repo<Account>::GetById(c.account_id).release();
     }
     ~DepositTransaction(){
         delete this->account;
         this->account = nullptr;
     }
 };
-
-#endif

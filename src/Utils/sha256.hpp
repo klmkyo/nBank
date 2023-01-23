@@ -47,5 +47,3 @@ private:
 	void pad();
 	void revert(uint8_t * hash);
 };
-
-std::string simple_sha256_hash(const std::string& input);

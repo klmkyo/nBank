@@ -7,11 +7,11 @@ Repositories/user.hpp
 Repositories/user.cpp
 Repositories/account.hpp
 Repositories/account.cpp
-Repositories/creditcard.hpp
-Repositories/creditcard.cpp
 Repositories/repos.hpp
 Utils/sha256.hpp
 Utils/sha256.cpp
+Utils/Utils.hpp
+Utils/Utils.cpp
 Logic/transaction.hpp
 Logic/transaction.cpp
 Logic/transfer.cpp

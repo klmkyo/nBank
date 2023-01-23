@@ -1,24 +1,13 @@
 #pragma once
-#include "../Database/database.hpp"
 #include <vector>
+#include "../Database/database.hpp"
+#include "../Utils/Utils.hpp"
 
 enum class CreateAccountResult {
     SUCCESS,
     FIELDS_EMPTY,
     INTERNAL_ERROR,
     PHONE_NUMBER_EXISTS
-};
-class UserRepo
-{
-    public:
-    std::unique_ptr<User> GetUserById(uint32_t uid);
-    uint32_t InsertUser(const User& user, bool overwrite= false);
-};
-
-
-struct HashedPassword {
-    std::string hash;
-    std::string salt;
 };
 
 enum class LoginResult {
@@ -40,9 +29,6 @@ enum class RegisterResult {
     INTERNAL_ERROR
 };
 
-HashedPassword HashPassword(const std::string& password);
-bool VerifyPassword(const std::string& password, const std::string& hash, const std::string& salt);
-std::string gen_random(const int len);
 LoginResponse Login(const std::string& login, const std::string& password);
 RegisterResult Register(const std::string& login, const std::string& name, const std::string& password);
 std::vector<Account> GetUserAccounts(uint32_t uid);

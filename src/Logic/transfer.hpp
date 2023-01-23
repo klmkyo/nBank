@@ -1,16 +1,13 @@
-#include "transaction.hpp"
-
-#ifndef _TRANSFER_HEADER
-#define _TRANSFER_HEADER
+#pragma once
+#include "Logic/transaction.hpp"
 
 class Transfer : public Transaction {
-    protected:
+protected:
     Account* recipient;
 
-    public:
+public:
     Transfer(Account* account, double amount, Account* recipient = nullptr);
-    
     virtual bool Execute(TransactionResult& result);
+
 };
 
-#endif

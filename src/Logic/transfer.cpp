@@ -1,4 +1,4 @@
-#include "transfer.hpp"
+#include "Logic/transfer.hpp"
 
 // "amount" parameter should be always positive in Transfer constructor
 Transfer::Transfer(Account* account, double amount, Account* recipient) 
@@ -19,7 +19,7 @@ bool Transfer::Execute(TransactionResult& result) {
     {
         // amount is stored negative
         this->recipient->balance += -(this->amount);
-        Repo::Account()->UpdateAccount(*(this->recipient));
+        Repo<Account>::Update(*(this->recipient));
         return true;
     }
     return false;

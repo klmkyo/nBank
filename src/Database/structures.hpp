@@ -1,9 +1,8 @@
+#pragma once
 #include <iostream>
 #include <set>
 #include <string>
 
-#ifndef _STRUCTURES_HEADER
-#define _STRUCTURES_HEADER
 
 struct User {
   int id;
@@ -54,6 +53,16 @@ struct CreditCard {
   }
 };
 
+
+struct TransactionH {
+  uint32_t id;
+
+  uint32_t sender_id;
+  uint32_t recipent_id;
+  std::string title;
+  double amount;
+};
+
 /* Structure Builder - should be used only once (in Database definition)*/
 class StructureBuilder{
   public:
@@ -87,8 +96,13 @@ class StructureBuilder{
                         make_column("cvv", &CreditCard::cvv),
                         make_column("expiration_month", &CreditCard::expiration_month),
                         make_column("expiration_year", &CreditCard::expiration_year),
-                        make_column("pin", &CreditCard::pin)));
+                        make_column("pin", &CreditCard::pin)),
+                make_table<TransactionH>("transactions",
+                        make_column("id", &TransactionH::id, autoincrement(), primary_key()),
+                        make_column("sender_id", &TransactionH::sender_id),
+                        make_column("recipent_id", &TransactionH::recipent_id),
+                        make_column("title", &TransactionH::title),
+                        make_column("amount", &TransactionH::amount)));
     };
 };
 
-#endif

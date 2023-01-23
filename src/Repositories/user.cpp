@@ -1,58 +1,6 @@
-#include "../Utils/sha256.hpp"
-#include <Repositories/repos.hpp>
+#include "Repositories/repos.hpp"
+#include "Repositories/user.hpp"
 
-/// @brief Search for user by id
-/// @param uid 
-/// @return unique_ptr<User> if found, otherwise nullptr
-std::unique_ptr<User> UserRepo::GetUserById(uint32_t uid)
-{
-    if (auto u = Database::getStorage()->get_pointer<User>(uid)){
-        return u;
-    } else {
-        return nullptr;
-    }
-}
-
-/// @brief Insert new user into the database, use overwrite if you want to replace existing user
-/// @param user 
-/// @param overwrite (optional, default: false)
-/// @return ID of created user (if failed, returns -1)
-uint32_t UserRepo::InsertUser(const User& user, bool overwrite)
-{
-    auto _user = UserRepo::GetUserById(user.id);
-    uint32_t id = -1;
-    if (_user && overwrite){
-        try{
-            Database::getStorage()->replace(user);
-            id = user.id;
-        }catch(...) {
-            // TODO: Exception handling
-            return -1;
-        }
-    } else {
-        try{
-            id = Database::getStorage()->insert(user);
-        }catch(...) {
-            // TODO: Exception handling
-            return -1;
-        }
-    }
-    return id;
-}
-
-/// @brief Hash password using sha2
-/// @param password
-/// @return HashedPassword
-HashedPassword HashPassword(const std::string& password)
-{
-    srand(time(NULL));
-    HashedPassword hp;
-    // random salt
-    hp.salt = gen_random(16);
-    // hash password
-    hp.hash = simple_sha256_hash(password + hp.salt);
-    return hp;
-}
 
 LoginResponse Login(const std::string& login, const std::string& password)
 {
@@ -70,7 +18,7 @@ LoginResponse Login(const std::string& login, const std::string& password)
         exit(1);
     } else {
         // sprawdź hasło
-        if (VerifyPassword(password, users[0].password_hash, users[0].password_salt)){
+        if (Utils::verify_password(password, users[0].password_hash, users[0].password_salt)){
             return LoginResponse { LoginResult::SUCCESS, users[0] };
         } else {
             return LoginResponse { LoginResult::WRONG_PASSWORD };
@@ -95,10 +43,10 @@ RegisterResult Register(const std::string& login, const std::string& name, const
         User user;
         user.login = login;
         user.name = name;
-        auto hp = HashPassword(password);
+        auto hp = Utils::HashPassword(password);
         user.password_hash = hp.hash;
         user.password_salt = hp.salt;
-        if (Repo::User()->InsertUser(user) == -1){
+        if (Repo<User>::Insert(user) == -1){
             return RegisterResult::INTERNAL_ERROR;
         } else {
             return RegisterResult::SUCCESS;
@@ -141,28 +89,4 @@ CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string&
     }
 }
 
-/// @brief Verifies password based on hash and salt
-/// @param password
-/// @param hash
-bool VerifyPassword(const std::string& password, const std::string& hash, const std::string& salt)
-{
-    return simple_sha256_hash(password + salt) == hash;
-}
 
-/// @brief Generate random string
-/// @param len
-/// @return std::string
-std::string gen_random(const int len) {
-    static const char alphanum[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-    std::string tmp_s;
-    tmp_s.reserve(len);
-
-    for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
-    }
-    
-    return tmp_s;
-}

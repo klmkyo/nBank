@@ -1,4 +1,4 @@
-#include "transaction.hpp"
+#include "Logic/transaction.hpp"
 
 Transaction::Transaction(Account* account, double amount){
     this->account = account;
@@ -25,7 +25,7 @@ bool Transaction::CheckExecute(TransactionResult& result){
 bool Transaction::Execute(TransactionResult& result){
     if (this->CheckExecute(result)){
         this->account->balance += this->amount;
-        Repo::Account()->UpdateAccount(*(this->account));
+        Repo<Account>::Update(*(this->account));
         // TODO: log transaction ?
         return true;
     }
