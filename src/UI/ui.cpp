@@ -243,15 +243,16 @@ void CreateAccountPanel(User& user)
         }
 
         //auto result = CreateUserAccount(user.id, name, phone_number_value);
-        AccountValuesCheckStatus result = Account::checkAccountValues(user.id, name, phone_number_value);
-                        Account acc {user.id, name, 0, phone_number_value};
+        auto result = Account::checkAccountValues(user.id, name, phone_number_value);
 
         switch (result) {
-            case AccountValuesCheckStatus::SUCCESS:
+            case AccountValuesCheckStatus::SUCCESS: {
+                Account acc {user.id, name, 0, phone_number_value};
                 Repo<Account>::Insert(acc);
                 Dialog("Utworzono konto!");
                 screen.ExitLoopClosure()();
                 break;
+            }
             //case AccountValuesCheckStatus::INTERNAL_ERROR:
             //    Dialog("Błąd wewnętrzny");
             //    break;
