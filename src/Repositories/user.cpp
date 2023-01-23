@@ -70,10 +70,7 @@ CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string&
         return CreateAccountResult::FIELDS_EMPTY;
     }
 
-    Account acc;
-    acc.name = name;
-    acc.phone_number = phone_number;
-    acc.user_id = user_id;
+    Account acc {user_id, name, 0, phone_number};
 
     // sprawdź czy numer telefonu jest unikalny
     auto accounts = Database::getStorage()->get_all<Account>(where(c(&Account::phone_number) == phone_number));

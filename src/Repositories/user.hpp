@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../Database/database.hpp"
+#include "../Database/Database.hpp"
 #include "../Utils/Utils.hpp"
 
 enum class CreateAccountResult {

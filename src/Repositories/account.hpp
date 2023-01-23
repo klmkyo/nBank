@@ -1,5 +1,5 @@
 #pragma once
-#include "Database/database.hpp"
+#include "Database/Database.hpp"
 
 enum CreateCreditCardResult {
     SUCCESS,

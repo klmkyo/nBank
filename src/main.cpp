@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sqlite3.h>
-#include "Database/database.hpp"
+#include "Database/Database.hpp"
 #include "Repositories/repos.hpp"
 #include "Repositories/user.hpp"
 #include "UI/ui.hpp"
