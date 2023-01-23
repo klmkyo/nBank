@@ -416,11 +416,11 @@ Elements TransactionHistory(const std::vector<TransactionData>& transactions, in
         // when received, display ammount in green
         if (transaction.sender_account_id == account_id) {
             transaction_components.push_back(
-                text(" Wysłano " + std::to_string(transaction.amount) + " zł do " + recipient_user.name + " (" + recipient_account.name + ") ") | color(Color::Red)
+                text(" Wysłano " + Utils::double_to_string(transaction.amount) + " zł do " + recipient_user.name + " (" + recipient_account.name + ") ") | color(Color::Red)
             );
         } else {
             transaction_components.push_back(
-                text(" Otrzymano " + std::to_string(transaction.amount) + " zł od " + sender_user.name + " (" + sender_account.name + ") ") | color(Color::Green)
+                text(" Otrzymano " + Utils::double_to_string(transaction.amount) + " zł od " + sender_user.name + " (" + sender_account.name + ") ") | color(Color::Green)
             );
         }
 
@@ -484,8 +484,8 @@ void Dashboard(User& user)
     // function that returns a Component that displays account details
     auto account_details = [&] {
         auto account = accounts[selected_account_id];
-        auto balance = std::to_string(account.balance);
-        auto phone_number = std::to_string(account.phone_number);
+        auto balance = Utils::double_to_string(account.balance);
+        auto phone_number = Utils::double_to_string(account.phone_number);
         auto account_name = account.name;
 
         // text(" ") - dodaje puste miejsce

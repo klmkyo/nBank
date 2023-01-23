@@ -1,3 +1,5 @@
+#include <iomanip>
+#include <sstream>
 #include "Utils.hpp"
 #include "time.h"
 #include "Utils/sha256.hpp"
@@ -67,5 +69,15 @@ namespace Utils {
         // hash password
         hp.hash = Utils::simple_sha256_hash(password + hp.salt);
         return hp;
+    }
+
+    /// @brief Returns a string from double with 2 decimal places
+    /// @param d
+    /// @return std::string
+    std::string double_to_string(double d)
+    {
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << d;
+        return ss.str();
     }
 }
