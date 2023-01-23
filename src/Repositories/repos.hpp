@@ -47,17 +47,20 @@ public:
         return id;
     }
     
-    static bool Update(const T& t) {
-        uint32_t id = -1;
-        if (Repo<T>::Exist(id)) {
-            try {
+    // Zrollbackowałem to, ponieważ u mnie zmiany nie były zapisywane do bazy danych
+    // jak jest lepszy sposób to zmieńcie tylko się upewnijcie że działa XD
+    static bool Update(const T& t)
+    {
+        if (auto _account = Repo<T>::GetById(t.id)){
+            try{
                 Database::getStorage()->update(t);
-                id = t.id;
-            } catch(...) {
-                return -1;
+            } catch(...){
+                return false;
             }
+            return true;
+        } else {
+            return false;
         }
-        return id;
     }
 };
 
