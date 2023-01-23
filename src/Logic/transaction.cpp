@@ -44,6 +44,7 @@ bool Transaction::Execute(TransactionResult& result){
     if (this->CheckExecute(result)){
         this->account->balance += this->amount;
         Repo<Account>::Update(*(this->account));
+        //Database::getStorage()->update(*account);
     }
     bool ret = result == TransactionResult::SUCCESS;
     resultString = ResultToString(result);
