@@ -21,6 +21,7 @@ public:
     Transaction(){};
     Transaction(double amount){this->amount = amount;};
     Transaction(Account* account, double amount);
+    virtual ~Transaction() {};
 
     virtual bool CheckExecute(TransactionResult& result);
     virtual bool Execute(TransactionResult& result);
