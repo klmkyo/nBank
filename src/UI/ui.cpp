@@ -444,7 +444,7 @@ Elements TransactionHistory(const std::vector<TransactionData>& transactions, in
     }
 
     if (transaction_components.empty()) {
-        transaction_components.push_back(text("Nie masz jeszcze żadnych transakcji!"));
+        transaction_components.push_back(center(text("Nie masz jeszcze żadnych transakcji!")) | flex);
     }
 
     return transaction_components;
