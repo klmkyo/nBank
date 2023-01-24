@@ -180,7 +180,7 @@ void RegisterScreen(std::string login = "", std::string password = "") {
 
 /// @brief Wyświetla dialog z wiadomością
 /// @param message - wiadomość do wyświetlenia
-void Dialog(const std::string& message)
+void Dialog(const std::string& message, uint width)
 {
     auto screen = ScreenInteractive::Fullscreen();
 
@@ -201,7 +201,7 @@ void Dialog(const std::string& message)
                     ),
                     separator(),
                     ok_button->Render()
-                 ) | border | size(WIDTH, EQUAL, 60)
+                 ) | border | size(WIDTH, EQUAL, width)
             );
     });
 
@@ -356,7 +356,7 @@ void CreateCreditCardPanel(Account& account)
         auto result = CreateCreditCard(account.id, name, pin_value);
         switch (result) {
             case CreateCreditCardResult::SUCCESS:
-                Dialog("Utworzono kartę! Jej szczegóły znajdziesz w zakładce 'Karty Kredytowe'");
+                Dialog("Utworzono kartę! Jej szczegóły znajdziesz w zakładce 'Karty Kredytowe'", 80);
                 screen.ExitLoopClosure()();
                 break;
             case CreateCreditCardResult::INTERNAL_ERROR:
