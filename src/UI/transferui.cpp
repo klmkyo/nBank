@@ -651,8 +651,6 @@ void TransferPanel(Account& account)
                     withdraw_transfer_button->Render(),
                     deposit_transfer_button->Render(),
                     separator(),
-                    text(L"UWAGA - przycisk poniżej segfaultuje") | color(Color::Red),
-                    text(L"jeśli ktoś wie jak to naprawić to zapraszam XD") | color(Color::Red),
                     exit_button->Render()
                 })
             )
