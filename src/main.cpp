@@ -7,6 +7,9 @@
 #include "UI/transferui.hpp"
 
 int main() {
+    // for random number generation
+    srand((unsigned) time(NULL));
+
     Database::getStorage()->sync_schema();
 
     /* //przelew blik między 2 kontami

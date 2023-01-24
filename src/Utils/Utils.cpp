@@ -26,8 +26,6 @@ namespace Utils {
         static const char alphanum[] =
             "0123456789";
 
-        srand((unsigned) time(NULL));
-
         tmp_s.reserve(len);
 
         for (int i = 0; i < len; ++i)
