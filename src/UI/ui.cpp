@@ -421,7 +421,9 @@ Elements TransactionHistory(const std::vector<TransactionData>& transactions, in
 {
     std::vector<Element> transaction_components;
 
-    for (auto& transaction : transactions) {
+    // iterate over transactions in reverse order using reverse iterator
+    for (auto i = transactions.rbegin(); i != transactions.rend(); i++) {
+        auto& transaction = *i;
         auto sender_account = Database::getStorage() -> get<Account>(transaction.sender_account_id);
         auto sender_user = Database::getStorage() -> get<User>(sender_account.user_id);
         auto recipient_account = Database::getStorage() -> get<Account>(transaction.recipient_account_id);
