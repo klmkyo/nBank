@@ -5,8 +5,7 @@
 #include <fstream>
 
 // thread safe version of localtime()
-inline std::tm localtime_xp(std::time_t timer)
-{
+inline std::tm localtime_xp(std::time_t timer) {
     std::tm bt{};
 #if defined(__unix__)
     localtime_r(&timer, &bt);

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sqlite3.h>
 #include "Database/Database.hpp"
-#include "UI/ui.hpp"
-#include "UI/transferui.hpp"
+#include "UI/UI.hpp"
+#include "UI/TransferUI.hpp"
 
 // #include "Repositories/repos.hpp"
 // #include "Repositories/user.hpp"

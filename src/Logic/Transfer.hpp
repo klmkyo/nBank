@@ -1,5 +1,5 @@
 #pragma once
-#include "Logic/transaction.hpp"
+#include "Logic/Transaction.hpp"
 
 /// @brief Transfer class is a type of Transaction, where the money goes from
 /// one account to another. [!] Amount used in constructor should be always positive.

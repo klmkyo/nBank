@@ -46,13 +46,29 @@ std::vector<CreditCard> GetCreditCardsByAccountId(int account_id) {
     return cards;
 }
 
-std::vector<TransactionData> GetTransactionsByAccountId(int account_id){
+std::vector<TransactionData> GetTransactionsByAccountId(int account_id) {
     using namespace sqlite_orm;
     // recepient id or sender id has to be equal to account_id
     auto transactions = Database::getStorage()->get_all<TransactionData>(where(c(&TransactionData::recipient_account_id) == account_id || c(&TransactionData::sender_account_id) == account_id));
     return transactions;
 }
 
+
+std::vector<std::string> getAccountNames(const std::vector<Account>& accounts) {
+    std::vector<std::string> accountNames;
+    for (auto& account : accounts) {
+        accountNames.push_back(account.name);
+    }
+    return accountNames;
+}
+
+std::vector<std::string> getCreditCardNames(const std::vector<CreditCard>& credit_cards) {
+    std::vector<std::string> creditCardNames;
+    for (auto& credit_card : credit_cards) {
+        creditCardNames.push_back(credit_card.name);
+    }
+    return creditCardNames;
+}
 
 LoginResponse Login(const std::string& login, const std::string& password) {
     using namespace sqlite_orm;

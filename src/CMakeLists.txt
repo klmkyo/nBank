@@ -13,16 +13,16 @@ Utils/sha256.hpp
 Utils/sha256.cpp
 Utils/Utils.hpp
 Utils/Utils.cpp
-Logic/transaction.hpp
-Logic/transaction.cpp
-Logic/transfer.cpp
-Logic/transfer.hpp
-Logic/payments.hpp
-Logic/logger.hpp
-UI/ui.hpp
-UI/ui.cpp
-UI/transferui.hpp
-UI/transferui.cpp)
+Logic/Transaction.hpp
+Logic/Transaction.cpp
+Logic/Transfer.cpp
+Logic/Transfer.hpp
+Logic/Payments.hpp
+Logic/Logger.hpp
+UI/UI.hpp
+UI/UI.cpp
+UI/TransferUI.hpp
+UI/TransferUI.cpp)
     
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

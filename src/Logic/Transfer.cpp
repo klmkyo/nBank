@@ -1,4 +1,4 @@
-#include "Logic/transfer.hpp"
+#include "Logic/Transfer.hpp"
 #include "Database/Repo.hpp"
 
 // "amount" parameter should be always positive in Transfer constructor
@@ -10,7 +10,7 @@ Transfer::Transfer(Account& account, double amount)
         this->amount = -amount;
 }
 
-void Transfer::SetRecipient(Account& recipient){
+void Transfer::SetRecipient(Account& recipient) {
     this->recipient = recipient;
     this->hasRecipient = true;
 }

@@ -4,7 +4,7 @@
 #include <ftxui/component/component_options.hpp>  // for InputOption
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/component/component.hpp>
-#include "UI/ui.hpp"
+#include "UI/UI.hpp"
 #include "UI/Helpers.hpp"
 
 
@@ -179,8 +179,7 @@ void RegisterScreen(std::string login = "", std::string password = "") {
 
 /// @brief Wyświetla dialog z wiadomością
 /// @param message - wiadomość do wyświetlenia
-void Dialog(const std::string& message, uint width)
-{
+void Dialog(const std::string& message, uint width) {
     auto screen = ScreenInteractive::Fullscreen();
 
     auto ok_button = Button("OK", [&] {
@@ -207,8 +206,7 @@ void Dialog(const std::string& message, uint width)
     screen.Loop(renderer);
 }
 
-void CreateAccountPanel(User& user)
-{
+void CreateAccountPanel(User& user) {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string name;
@@ -314,8 +312,7 @@ void CreateAccountPanel(User& user)
     screen.Loop(renderer);
 }
 
-void CreateCreditCardPanel(Account& account)
-{
+void CreateCreditCardPanel(Account& account) {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string name;
@@ -399,22 +396,6 @@ void CreateCreditCardPanel(Account& account)
     screen.Loop(renderer);
 }
 
-std::vector<std::string> getAccountNames(const std::vector<Account>& accounts) {
-    std::vector<std::string> accountNames;
-    for (auto& account : accounts) {
-        accountNames.push_back(account.name);
-    }
-    return accountNames;
-}
-
-std::vector<std::string> getCreditCardNames(const std::vector<CreditCard>& credit_cards) {
-    std::vector<std::string> creditCardNames;
-    for (auto& credit_card : credit_cards) {
-        creditCardNames.push_back(credit_card.name);
-    }
-    return creditCardNames;
-}
-
 // TransactionData(uint32_t sender_id, uint32_t recipent_id, double amount)
 Elements TransactionHistory(const std::vector<TransactionData>& transactions, int account_id)
 {
@@ -453,9 +434,7 @@ Elements TransactionHistory(const std::vector<TransactionData>& transactions, in
 
 /// @brief Wyświetla panel użytkownika
 /// @param user - użytkownik
-void Dashboard(User& user)
-{
-
+void Dashboard(User& user) {
     auto screen = ScreenInteractive::Fullscreen();
 
     int selected_account_id = 0;

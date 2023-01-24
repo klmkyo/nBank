@@ -4,16 +4,15 @@
 #include <ftxui/component/component_options.hpp>  // for InputOption
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/component/component.hpp>
-#include "Logic/payments.hpp"
-#include "UI/ui.hpp"
+#include "UI/TransferUI.hpp"
+#include "UI/UI.hpp"
 
 #define NO_PIN_LIMIT 10.0
 
 using namespace ftxui;
 
-void HandleTransactionResult(const TransactionResult& result)
-{
-    switch(result){
+void HandleTransactionResult(const TransactionResult& result) {
+    switch(result) {
         case TransactionResult::ACCOUNT_NOT_FOUND:
             Dialog("Nie znaleziono konta o podanym numerze karty!");
             break;
@@ -30,8 +29,7 @@ void HandleTransactionResult(const TransactionResult& result)
 }
 
 // DirectTransfer(Account* account, double amount, int card_number)
-void DirectTransferPanel(Account& account)
-{
+void DirectTransferPanel(Account& account) {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string ammount;
@@ -40,12 +38,12 @@ void DirectTransferPanel(Account& account)
     Component input_ammount = Input(&ammount, "Kwota do przelania");
     Component input_card_number = Input(&card_number, "Numer karty odbiorcy");
 
-    Component send_button = Button(L"Wyślij", [&]{
-        if (ammount.empty()){
+    Component send_button = Button(L"Wyślij", [&] {
+        if (ammount.empty()) {
             Dialog("Kwota do przelania nie może być pusta!");
             return;
         }
-        else if (card_number.empty()){
+        else if (card_number.empty()) {
             Dialog("Numer karty odbiorcy nie może być pusty!");
             return;
         }
@@ -104,8 +102,7 @@ void DirectTransferPanel(Account& account)
 
 // WithdrawTransaction(const CreditInput& input, double amount)
 // CreditInput(number, cvv, exp_month, exp_year, pin)
-void WithdrawPanel()
-{
+void WithdrawPanel() {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string ammount;
@@ -242,8 +239,7 @@ void WithdrawPanel()
 }
 
 // BLIKTransfer(Account* account, double amount, int phone_number) 
-void BLIKTransferPanel(Account& account)
-{
+void BLIKTransferPanel(Account& account) {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string ammount;
@@ -253,7 +249,7 @@ void BLIKTransferPanel(Account& account)
     Component input_phone_number = Input(&phone_number, "Numer telefonu odbiorcy");
 
     Component send_button = Button(L"Wyślij", [&]{
-        if (ammount.empty()){
+        if (ammount.empty()) {
             Dialog("Kwota do przelania nie może być pusta!");
             return;
         }
@@ -316,8 +312,7 @@ void BLIKTransferPanel(Account& account)
 
 // CardTransaction(const CreditInput& input, double amount)
 // CreditInput(number, cvv, exp_month, exp_year, pin;
-void CardTransactionPanel()
-{
+void CardTransactionPanel() {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string ammount;
@@ -335,23 +330,23 @@ void CardTransactionPanel()
     Component input_pin = Input(&pin, "PIN (wymagany powyżej " + std::to_string(NO_PIN_LIMIT) + ")");
 
     Component send_button = Button(L"Wyślij", [&]{
-        if (ammount.empty()){
+        if (ammount.empty()) {
             Dialog("Kwota do przelania nie może być pusta!");
             return;
         }
-        else if (card_number.empty()){
+        else if (card_number.empty()) {
             Dialog("Numer karty nie może być pusty!");
             return;
         }
-        else if (card_expiration_year.empty()){
+        else if (card_expiration_year.empty()) {
             Dialog("Rok ważności karty nie może być pusty!");
             return;
         }
-        else if (card_expiration_month.empty()){
+        else if (card_expiration_month.empty()) {
             Dialog("Miesiąc ważności karty nie może być pusty!");
             return;
         }
-        else if (card_cvv.empty()){
+        else if (card_cvv.empty()) {
             Dialog("CVV karty nie może być pusty!");
             return;
         }
@@ -462,8 +457,7 @@ void CardTransactionPanel()
 
 
 // DepositTransaction(const CreditInput& input, double amount)
-void DepositPanel()
-{
+void DepositPanel() {
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string ammount;
@@ -601,8 +595,7 @@ void DepositPanel()
 }
 
 // Transfer type selector
-void TransferPanel(Account& account)
-{
+void TransferPanel(Account& account) {
     auto screen = ScreenInteractive::Fullscreen();
 
     auto direct_transfer_button = Button(L"Przelew bezpośredni", [&]{

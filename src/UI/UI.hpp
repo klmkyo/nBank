@@ -1,6 +1,6 @@
 #pragma once
 #include "Database/User.hpp"
-#include "UI/transferui.hpp"
+#include "UI/TransferUI.hpp"
 
 void LoginScreen(User& user);
 void RegisterScreen(std::string login, std::string password);

@@ -1,6 +1,6 @@
 #pragma once
 #include <ftxui/component/component.hpp>
-#include "Logic/payments.hpp"
+#include "Logic/Payments.hpp"
 
 // they need to be void, they was set to ftxui::Component which is typename for shared_ptr, even that in transferui.cpp they was set to void something overrided them 
 void HandleTransactionResult(const TransactionResult& result);

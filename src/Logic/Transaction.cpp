@@ -1,13 +1,13 @@
-#include "Logic/transaction.hpp"
+#include "Logic/Transaction.hpp"
 #include "Database/Repo.hpp"
 
-Transaction::Transaction(Account& account, double amount){
+Transaction::Transaction(Account& account, double amount) {
     this->account = account;
     this->hasAccount = true;
     this->amount = amount;
 }
 
-void Transaction::SetAccount(Account& account){
+void Transaction::SetAccount(Account& account) {
     this->account = account;
     this->hasAccount = true;
 }
@@ -28,7 +28,7 @@ std::string Transaction::ResultToString(const TransactionResult& tr) {
     }
 }
 
-bool Transaction::CheckExecute(TransactionResult& result){
+bool Transaction::CheckExecute(TransactionResult& result) {
     if (!hasAccount){
         result = TransactionResult::ACCOUNT_NOT_FOUND;
         return false;
@@ -45,7 +45,7 @@ bool Transaction::CheckExecute(TransactionResult& result){
     return true;
 }
 
-bool Transaction::Execute(TransactionResult& result){
+bool Transaction::Execute(TransactionResult& result) {
     if (this->CheckExecute(result)){
         account.balance += amount;
         Repo<Account>::Update(this->account);

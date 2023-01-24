@@ -1,8 +1,7 @@
 #pragma once
 #include "Database/Account.hpp"
 #include "Database/User.hpp"
-
-#include "logger.hpp"
+#include "Logger.hpp"
 
 enum class TransactionResult {
     ACCOUNT_NOT_FOUND,

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "Logic/transfer.hpp"
+#include "Logic/Transfer.hpp"
 #include "Database/Repo.hpp"
 
 
@@ -59,7 +59,7 @@ class BLIKTransfer : public Transfer {
 
     std::string GetLogMessage(bool success) override {
         std::ostringstream oss;
-        if (success){
+        if (success) {
             oss << "BLIK transfer of " << std::abs(amount)
              << " PLN from account '" << account.name << "(id:"<<account.id<<")' to '"
              << recipient.name << "(id:"<<recipient.id<<")' successful!";
@@ -126,8 +126,7 @@ class CardTransaction : public Transaction {
 class WithdrawTransaction : public Transaction {
     public:
     WithdrawTransaction(const CreditInput& input, double amount)
-    : Transaction(-amount)
-    {
+    : Transaction(-amount) {
         using namespace sqlite_orm;
         auto cards = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::number) == input.number));
         if (cards.size() < 1)
@@ -163,8 +162,7 @@ class WithdrawTransaction : public Transaction {
 class DepositTransaction : public Transaction {
     public:
     DepositTransaction(const CreditInput& input, double amount)
-    : Transaction(amount)
-    {
+    : Transaction(amount) {
         using namespace sqlite_orm;
         auto cards = Database::getStorage()->get_all<CreditCard>(where(c(&CreditCard::number) == input.number));
         if (cards.size() < 1)
