@@ -7,8 +7,6 @@
 #include "UI/UI.hpp"
 #include "UI/Helpers.hpp"
 
-
-// TODO display logo
 const std::vector<std::string> LOGO = {
     R"(          $$$$$$$\                      $$\       )",
     R"(          $$  __$$\                     $$ |      )",
@@ -30,7 +28,6 @@ void LoginScreen(User& user) {
     auto screen = ScreenInteractive::Fullscreen();
 
     Elements elements;
-    // go through each line of logo, and append text(line) to elements
     for (auto& line : LOGO) {
         elements.push_back(text(line));
     }
@@ -39,6 +36,7 @@ void LoginScreen(User& user) {
     std::string password;
 
     Component input_login = Input(&login, "login");
+
     InputOption password_option;
     password_option.password = true;
     Component input_password = Input(&password, "hasło", password_option);
