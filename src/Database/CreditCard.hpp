@@ -4,9 +4,9 @@
 
 class CreditCard {
 public:
-  int id;
+  uint32_t id;
 
-  int account_id;
+  uint32_t account_id;
   std::string name;
 
   int number;

@@ -20,7 +20,6 @@ CreateCreditCardResult CreateCreditCard(int account_id, std::string name, int pi
     }
 
     // get account
-    //auto account = Repo::Account()->GetAccountById(account_id);
     auto account = Repo<Account>::GetById(account_id);
 
     if (account){

@@ -3,15 +3,6 @@
 #include "../Database/Database.hpp"
 #include "../Utils/Utils.hpp"
 
-enum class CreateAccountResult {
-    SUCCESS,
-    FIELDS_EMPTY,
-    INTERNAL_ERROR,
-    PHONE_NUMBER_EXISTS
-};
-
-
-
 
 enum class LoginResult {
     SUCCESS,
@@ -35,4 +26,3 @@ enum class RegisterResult {
 LoginResponse Login(const std::string& login, const std::string& password);
 RegisterResult Register(const std::string& login, const std::string& name, const std::string& password);
 std::vector<Account> GetUserAccounts(uint32_t uid);
-CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, int phone_number);

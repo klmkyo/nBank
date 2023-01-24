@@ -4,7 +4,7 @@
 
 class User {
 public:
-  int id;
+  uint32_t id;
 
   std::string name;
   std::string login;

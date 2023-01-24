@@ -61,30 +61,5 @@ std::vector<Account> GetUserAccounts(uint32_t uid)
     return accounts;
 }
 
-// tworzy rachunek dla użytkownika
-CreateAccountResult CreateUserAccount(const uint32_t user_id, const std::string& name, int phone_number)
-{
-    using namespace sqlite_orm;
-    // sprawdź czy pola nie są puste
-    if (name.empty() || phone_number < 0){
-        return CreateAccountResult::FIELDS_EMPTY;
-    }
-
-    Account acc {user_id, name, 0, phone_number};
-
-    // sprawdź czy numer telefonu jest unikalny
-    auto accounts = Database::getStorage()->get_all<Account>(where(c(&Account::phone_number) == phone_number));
-
-    if (accounts.size() > 0){
-        return CreateAccountResult::PHONE_NUMBER_EXISTS;
-    }
-
-    auto id = Database::getStorage()->insert(acc);
-    if (id == -1){
-        return CreateAccountResult::INTERNAL_ERROR;
-    } else {
-        return CreateAccountResult::SUCCESS;
-    }
-}
 
 
