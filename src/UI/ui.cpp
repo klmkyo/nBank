@@ -258,17 +258,6 @@ void CreateAccountPanel(User& user)
             return;
         }
 
-        double balance_value;
-        try {
-            balance_value = std::stod(balance);
-        } catch (const std::invalid_argument& e) {
-            Dialog("Saldo musi być liczbą");
-            return;
-        } catch (const std::out_of_range& e) {
-            Dialog("Saldo zbyt duże!");
-            return;
-        }
-
         //auto result = CreateUserAccount(user.id, name, phone_number_value);
         auto result = Account::parseAccountValues(user.id, name, phone_number_value);
 
@@ -285,6 +274,9 @@ void CreateAccountPanel(User& user)
                 break;
             case ParsingAccountValuesStatus::PHONE_NUMBER_EXISTS:
                 Dialog("Konto z podanym numerem telefonu już istnieje");
+                break;
+            case ParsingAccountValuesStatus::BALANCE_OUT_OF_RANGE:
+                Dialog("Saldo jest zbyt duże");
                 break;
         }
     });
@@ -451,6 +443,10 @@ Elements TransactionHistory(const std::vector<TransactionData>& transactions, in
         transaction_components.push_back(separator());
     }
 
+    if (transaction_components.empty()) {
+        transaction_components.push_back(text("Nie masz jeszcze żadnych transakcji!"));
+    }
+
     return transaction_components;
 }
 
@@ -610,7 +606,6 @@ void Dashboard(User& user)
             );
     });
 
-    // for now it's just a placeholder
     auto historyTransactionRenderer = Renderer([&] {
         refresh_data_transactions_only();
         return 
