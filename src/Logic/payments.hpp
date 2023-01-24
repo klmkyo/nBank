@@ -52,8 +52,8 @@ class BLIKTransfer : public Transfer {
         auto accounts = Database::getStorage()->get_all<Account>(where(c(&Account::phone_number) == phone_number));
         if (accounts.size() < 1)
             return; // account not found
-        //Account recipient = *(Repo<Account>::GetById(accounts[accounts.size() - 1].id));
-        //SetRecipient(recipient);
+        Account recipient = *(Repo<Account>::GetById(accounts[accounts.size() - 1].id));
+        SetRecipient(recipient);
     }
 
     std::string GetLogMessage(bool success) override {
