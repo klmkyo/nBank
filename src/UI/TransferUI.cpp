@@ -267,9 +267,9 @@ void BLIKTransferPanel(Account& account) {
             return;
         }
 
-        int ammount_value;
+        double ammount_value;
         try {
-            ammount_value = std::stoi(ammount);
+            ammount_value = std::stod(ammount);
         } catch (std::invalid_argument& e) {
             Dialog("Kwota do przelania musi być liczbą!");
             return;
