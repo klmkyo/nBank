@@ -6,5 +6,6 @@
 void HandleTransactionResult(const TransactionResult& result);
 void DirectTransferPanel(Account& account);
 void BLIKTransferPanel(Account& account);
+void CardTransactionPanel();
 void DepositPanel();
 void TransferPanel(Account& account);
