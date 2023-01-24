@@ -485,7 +485,7 @@ void Dashboard(User& user)
     auto account_details = [&] {
         auto account = accounts[selected_account_id];
         auto balance = Utils::double_to_string(account.balance);
-        auto phone_number = Utils::double_to_string(account.phone_number);
+        auto phone_number = std::to_string(account.phone_number);
         auto account_name = account.name;
 
         // text(" ") - dodaje puste miejsce
