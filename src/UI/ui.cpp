@@ -230,6 +230,22 @@ void CreateAccountPanel(User& user)
             return;
         }
 
+        double balance_value;
+
+        if (balance.empty()) {
+            balance_value = 0;
+        } else {
+            try {
+                balance_value = std::stod(balance);
+            } catch (const std::invalid_argument& e) {
+                Dialog("Saldo musi być liczbą");
+                return;
+            } catch (const std::out_of_range& e) {
+                Dialog("Saldo jest zbyt duże");
+                return;
+            }
+        }
+
         // bezpieczne rzutowanie na double balance i phone_number
         int phone_number_value;
         try {
@@ -247,7 +263,7 @@ void CreateAccountPanel(User& user)
 
         switch (result) {
             case AccountValuesCheckStatus::SUCCESS: {
-                Account acc {static_cast<uint32_t>(user.id), name, 0, phone_number_value};
+                Account acc {static_cast<uint32_t>(user.id), name, balance_value, phone_number_value};
                 Repo<Account>::Insert(acc);
                 Dialog("Utworzono konto!");
                 screen.ExitLoopClosure()();
