@@ -27,6 +27,6 @@ public:
     static ParsingAccountValuesStatus parseAccountValues(uint32_t user_id, std::string name, int phone_number);
 
     friend std::ostream& operator<<(std::ostream& os, const Account& acc) {
-    return os << "Account(id=" << acc.id << ", name=" << acc.name << ", user="<<acc.user_id<<", balance="<<acc.balance<<", phone_number="<<acc.phone_number<<")";
+        return os << "Account(id=" << acc.id << ", name=" << acc.name << ", user="<<acc.user_id<<", balance="<<acc.balance<<", phone_number="<<acc.phone_number<<")";
     }
 };

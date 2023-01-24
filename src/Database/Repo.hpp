@@ -11,7 +11,7 @@ public:
         return nullptr;
     }
 
-    static bool Exist(uint32_t id) { // watchout maybe wrong
+    static bool Exist(uint32_t id) { 
         return Database::getStorage()->get_pointer<T>(id) ? true : false; 
     }
 
@@ -34,27 +34,22 @@ public:
 
     static uint32_t Replace(const T& t) {
         uint32_t id = -1;
-        //if (Repo<T>::Exist(id)) {
-            try {
-                Database::getStorage()->replace(t);
-                id = t.id;
-            } catch(...) {
-                return -1;
-            }
-        //}
+        try {
+            Database::getStorage()->replace(t);
+            id = t.id;
+        } catch(...) {
+            return -1;
+        }
         return id;
     }
     
     static bool Update(T& t) {
         uint32_t id = -1;
-        //if (Repo<T>::Exist(id)) {
-            try {
-                Database::getStorage()->update(t);
-            } catch(...){
-                return false;
-            }
-        //}
-
+        try {
+            Database::getStorage()->update(t);
+        } catch(...) {
+            return false;
+        }
         return 1;
     }
 };

@@ -62,8 +62,7 @@ Database::getStorage()->insert(...);
 Database::getStorage()->sync_schema();
 */
 
-class Database
-{
+class Database {
     public:
     /// @return Shared pointer of Storage object (SQLite_ORM) 
     static std::shared_ptr<Storage> getStorage() {
