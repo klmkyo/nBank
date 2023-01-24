@@ -1,6 +1,7 @@
 #pragma once
-#include "Repositories/user.hpp"
-#include "Repositories/repos.hpp"
+#include "Database/Account.hpp"
+#include "Database/User.hpp"
+
 #include "logger.hpp"
 
 enum class TransactionResult {

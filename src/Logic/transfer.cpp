@@ -1,4 +1,5 @@
 #include "Logic/transfer.hpp"
+#include "Database/Repo.hpp"
 
 // "amount" parameter should be always positive in Transfer constructor
 Transfer::Transfer(Account& account, double amount) 

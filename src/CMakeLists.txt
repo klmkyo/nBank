@@ -8,12 +8,7 @@ Database/CreditCard.hpp
 Database/User.hpp
 Database/TransactionData.hpp
 Database/TransactionData.cpp
-
-Repositories/user.hpp 
-Repositories/user.cpp
-Repositories/account.hpp
-Repositories/account.cpp
-Repositories/repos.hpp
+Database/Repo.hpp
 Utils/sha256.hpp
 Utils/sha256.cpp
 Utils/Utils.hpp

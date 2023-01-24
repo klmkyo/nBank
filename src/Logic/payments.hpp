@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include "Logic/transfer.hpp"
+#include "Database/Repo.hpp"
 
 
 // Below this amount, transactions do not require the pin input

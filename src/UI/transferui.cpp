@@ -4,10 +4,8 @@
 #include <ftxui/component/component_options.hpp>  // for InputOption
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/component/component.hpp>
-#include <Repositories/user.hpp>
-#include <Repositories/repos.hpp>
-#include <Logic/payments.hpp>
-#include "ui.hpp"
+#include "Logic/payments.hpp"
+#include "UI/ui.hpp"
 
 #define NO_PIN_LIMIT 10.0
 

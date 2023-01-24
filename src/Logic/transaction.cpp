@@ -1,6 +1,5 @@
 #include "Logic/transaction.hpp"
-
-
+#include "Database/Repo.hpp"
 
 Transaction::Transaction(Account& account, double amount){
     this->account = account;

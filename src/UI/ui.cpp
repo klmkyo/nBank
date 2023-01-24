@@ -4,10 +4,9 @@
 #include <ftxui/component/component_options.hpp>  // for InputOption
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/component/component.hpp>
-#include <Repositories/user.hpp>
-#include <Repositories/repos.hpp>
-#include "ui.hpp"
-#include "transferui.hpp"
+#include "UI/ui.hpp"
+#include "UI/Helpers.hpp"
+
 
 // TODO display logo
 const std::vector<std::string> LOGO = {
