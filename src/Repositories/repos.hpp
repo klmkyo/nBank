@@ -1,6 +1,5 @@
 #pragma once
-#include "user.hpp"
-#include "account.hpp"
+#include "Database/Database.hpp"
 
 template <class T>
 class Repo {
