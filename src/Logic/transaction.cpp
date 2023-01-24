@@ -2,9 +2,15 @@
 
 
 
-Transaction::Transaction(Account* account, double amount){
+Transaction::Transaction(Account& account, double amount){
     this->account = account;
+    this->hasAccount = true;
     this->amount = amount;
+}
+
+void Transaction::SetAccount(Account& account){
+    this->account = account;
+    this->hasAccount = true;
 }
 
 std::string Transaction::ResultToString(const TransactionResult& tr) {
@@ -24,15 +30,15 @@ std::string Transaction::ResultToString(const TransactionResult& tr) {
 }
 
 bool Transaction::CheckExecute(TransactionResult& result){
-    if (this->account == nullptr){
+    if (!hasAccount){
         result = TransactionResult::ACCOUNT_NOT_FOUND;
         return false;
     }
-    if (this->requirePin && this->wrongPin){
+    if (requirePin && wrongPin){
         result = TransactionResult::WRONG_PIN;
         return false;
     }
-    if (this->amount < 0 && this->account->balance < this->amount){
+    if (amount < 0 && account.balance < amount){
         result = TransactionResult::NO_MONEY;
         return false;
     }
@@ -42,8 +48,8 @@ bool Transaction::CheckExecute(TransactionResult& result){
 
 bool Transaction::Execute(TransactionResult& result){
     if (this->CheckExecute(result)){
-        this->account->balance += this->amount;
-        Repo<Account>::Update(*(this->account));
+        account.balance += amount;
+        Repo<Account>::Update(this->account);
     }
     bool ret = result == TransactionResult::SUCCESS;
     resultString = ResultToString(result);

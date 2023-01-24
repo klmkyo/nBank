@@ -12,20 +12,20 @@ int main() {
 
     Database::getStorage()->sync_schema();
 
-    /* //przelew blik między 2 kontami
-    uint32_t test1 = Repo<Account>::Insert(Account{-1, -1, "test1", 15.0, 1337});
-    uint32_t test2 = Repo<Account>::Insert(Account{-1, -1, "test2", 66.0, 4752});
+    /*//przelew blik między 2 kontami
+    uint32_t test1 = Repo<Account>::Insert(Account{0, "test1", 15.0, 1337});
+    uint32_t test2 = Repo<Account>::Insert(Account{0, "test2", 66.0, 4752});
     Account* acc = Repo<Account>::GetById(test1).release();
     Account* acc2 = Repo<Account>::GetById(test2).release();
     std::cout << *acc << std::endl;
     std::cout << *acc2 << std::endl;
     // 5pln z konta acc(ptr) na podany numer tel(int)
-    BLIKTransfer t = BLIKTransfer(acc, 5, 122);
+    BLIKTransfer t = BLIKTransfer(*acc, 5, 4752);
     TransactionResult tr;
     t.Execute(tr); // wykonuje przelew
     delete acc, acc2;
     acc2 = Repo<Account>::GetById(test2).release(); // pobiera zaktualizowane dane z bazy
-    return 0; */
+    return 0;*/
     
 
     // do debugowania paneli przelewów

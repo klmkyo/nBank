@@ -70,7 +70,7 @@ void DirectTransferPanel(Account& account)
         }
 
         TransactionResult result;
-        DirectTransfer transfer(&account, ammount_value, card_number_value);
+        DirectTransfer transfer(account, ammount_value, card_number_value);
         transfer.Execute(result);
 
         HandleTransactionResult(result);
@@ -282,7 +282,7 @@ void BLIKTransferPanel(Account& account)
         }
 
         TransactionResult result;
-        BLIKTransfer transfer(&account, ammount_value, phone_number_value);
+        BLIKTransfer transfer(account, ammount_value, phone_number_value);
         transfer.Execute(result);
 
         HandleTransactionResult(result);

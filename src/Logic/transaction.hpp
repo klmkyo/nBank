@@ -17,7 +17,8 @@ class Transaction : LoggedOperation {
 
 protected:
     double amount = 0.0;
-    Account* account = nullptr;
+    Account account;
+    bool hasAccount = false;
     bool requirePin = false;
     bool wrongPin = true;
     std::string resultString;
@@ -25,8 +26,9 @@ protected:
 public:
     Transaction(){};
     Transaction(double amount){this->amount = amount;};
-    Transaction(Account* account, double amount);
+    Transaction(Account& account, double amount);
     virtual ~Transaction() {};
+    void SetAccount(Account& account);
     void LogAction(bool success) {
         LoggedOperation::LogAction(success);
     }
