@@ -11,7 +11,7 @@ protected:
 
 public:
     Transfer(Account& account, double amount);
-    virtual bool Execute(TransactionResult& result);
+    virtual bool Execute(TransactionResult& result) override;
     void SetRecipient(Account& recipient);
 
 };

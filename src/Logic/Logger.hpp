@@ -33,6 +33,7 @@ protected:
             std::ofstream fw(path, std::ios_base::out | std::ios_base::app);
             if (fw.is_open()){
                 fw << time() << " " << GetLogMessage(success) << "\n";
+                fw.close();
             }
         } catch (const char* msg) {
             std::cout << "Error while writing log file: " << msg << std::endl;
